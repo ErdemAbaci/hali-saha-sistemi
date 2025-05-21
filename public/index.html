@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halısahalar</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    function toggleFilters() {
+      const filters = document.getElementById('filter-options');
+      filters.classList.toggle('hidden');
+    }
+  </script>
+</head>
+<body class="bg-gray-100">
+  <div class="p-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-4xl font-bold">Halısahalar</h1>
+      <div>
+        <a href="login.html" class="text-green-600 hover:underline mr-4">Giriş Yap</a>
+        <a href="signup.html" class="text-green-600 hover:underline">Kayıt Ol</a>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <input type="text" placeholder="Search venues by name or location..." class="w-full p-3 rounded border border-gray-300">
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button onclick="toggleFilters()" class="bg-white border rounded px-4 py-2 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 010 2H4a1 1 0 01-1-1zm2 5a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm2 5a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" />
+        </svg>
+        Filtreler
+      </button>
+    </div>
+
+    <div id="filter-options" class="hidden bg-white p-4 mt-4 rounded shadow">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Fiyata Göre</label>
+          <select class="w-full mt-1 p-2 border border-gray-300 rounded">
+            <option>Artan</option>
+            <option>Azalan</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Alfabeye Göre</label>
+          <select class="w-full mt-1 p-2 border border-gray-300 rounded">
+            <option>A-Z</option>
+            <option>Z-A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      <!-- Venue Cards -->
+      <div class="bg-white rounded shadow overflow-hidden">
+        <img src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4no8PIfjo8l_RQvIYk4U4lox6g-t0BXreHHeFjVHOOHnujuNNPsCQU-uvaLAaweJQElHUKANp5uyanfY_j-BJB8jicT9BBrb7P1eIyhijrSdgJF_hDE3EU_3Ycd2Rf-8hzxp7K-w2A=s1360-w1360-h1020-rw" alt="Sporium23" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h2 class="font-bold text-lg">Sporium23 Halısaha</h2>
+          <p class="text-sm text-gray-600">📍 Cumhuriyet, Fatih Ahmet Baba Blv., 23190 Merkez/Elazığ</p>
+          <p class="text-sm text-gray-600">🕒 09:00 - 24:00</p>
+          <p class="mt-2 font-semibold">4 Fields <span class="text-green-600">1440₺/hour</span></p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded shadow overflow-hidden">
+        <img src="img/firat.jpg" alt="Fırat Halısaha" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h2 class="font-bold text-lg">Fırat Halısaha</h2>
+          <p class="text-sm text-gray-600">📍 Üniversite, Cumhuriyet, Şht. Korg. Hulusi Sayın Blv., 23200 Merkez/Elazığ</p>
+          <p class="text-sm text-gray-600">🕒 08:00 - 24:00</p>
+          <p class="mt-2 font-semibold">1 Fields <span class="text-green-600">1200₺/hour</span></p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded shadow overflow-hidden">
+        <img src="https://scontent.fyei6-1.fna.fbcdn.net/v/t39.30808-6/300474342_175391711718437_1687306230063019580_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=ErSZCXSEvysQ7kNvwH76_n6&_nc_oc=AdkPFWa0uhETt9hb0RG_WdO3BOqheUgTeP5da1rIRqwIGjaxXu218QQjFvrPSL5jCto&_nc_zt=23&_nc_ht=scontent.fyei6-1.fna&_nc_gid=8-kgUxrd65eWC6SdMBtYmg&oh=00_AfLx8icP5Q8lzIN8LvUgrvdmBnTlkAIC9WSoGa1bVnU3Dw&oe=6831FE36" alt="Futbol Times" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h2 class="font-bold text-lg">Futbol Times Halısaha</h2>
+          <p class="text-sm text-gray-600">📍 Abdullah Paşa, Şht. Niyazi Yıldırım Cd., 23270 Merkez/Elazığ</p>
+          <p class="text-sm text-gray-600">🕒 09:00 - 24:00</p>
+          <p class="mt-2 font-semibold">3 Fields <span class="text-green-600">1380₺/hour</span></p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded shadow overflow-hidden">
+        <img src="https://lh3.googleusercontent.com/p/AF1QipNzwayEQHaAosM640Ch1twM34LJCJUY0-GBql-R=s1360-w1360-h1020-rw" alt="Amsterdam" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h2 class="font-bold text-lg">Amsterdam Halısaha</h2>
+          <p class="text-sm text-gray-600">📍 Kültür, Zübeyde Hanım Cd. no:131, 23100 Merkez/Elazığ</p>
+          <p class="text-sm text-gray-600">🕒 10:00 - 23:00</p>
+          <p class="mt-2 font-semibold">2 Fields <span class="text-green-600">1100₺/hour</span></p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded shadow overflow-hidden">
+        <img src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4npnl8v_RJziDZGRBCILacRnB5UHAzqAZ7jG9xN7eNTpoWBxOHa4T5hREl8Sov85zsnQf4IgpBt1ZHibIF5xeVee5j0edhu8GaohDYadqtQ5ZAOQYGLnqUMsDDVN2DjMQFpbZJGF=s1360-w1360-h1020-rw" alt="Fairplay" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h2 class="font-bold text-lg">Fairplay Halısaha</h2>
+          <p class="text-sm text-gray-600">📍 HİCRET MAH. VENK KÜME EVLERİ NO.382 Merkez/Elazığ</p>
+          <p class="text-sm text-gray-600">🕒 08:30 - 23:30</p>
+          <p class="mt-2 font-semibold">1 Fields <span class="text-green-600">1300₺/hour</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
