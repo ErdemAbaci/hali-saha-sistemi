@@ -3,6 +3,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require("./config/db");
 const authRoutes = require("../backend/routes/authRoutes");
+const userRoutes = require("../backend/routes/userRoutes");
 
 
 // .env dosyasını yükle
@@ -24,6 +25,9 @@ app.get('/', (req, res) => {
 
 //Auth Route
 app.use("/api/auth", authRoutes);
+
+//User Route
+app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server ${PORT} portunda çalışıyor`);
