@@ -4,6 +4,7 @@ const fieldSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     location: { type: String, required: true },
+    price: { type: Number, required: true },
     phone: { type: String },
     fields: [{ type: Number }], // Örn: [1, 2, 3, 4] Halı sahası numaraları
   },
