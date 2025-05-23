@@ -19,6 +19,12 @@ app.use((req, res, next) => {
   next();
 });
 
+<<<<<<< HEAD
+=======
+// Frontend kodlarını serve etmek için middleware
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+>>>>>>> master
 // JSON gövdelerini parse etmek için middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
