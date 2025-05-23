@@ -5,8 +5,6 @@ const connectDB = require("./config/db");
 const authRoutes = require("../backend/routes/authRoutes");
 const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");
-const reservationRoutes = require("../backend/routes/reservationRoutes");
-const path = require("path");
 
 // .env dosyasını yükle
 dotenv.config();
@@ -20,8 +18,7 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} geldi`);
   next();
 });
-// Frontend kodlarını serve etmek için middleware
-app.use(express.static(path.join(__dirname, "../frontend")));
+
 // JSON gövdelerini parse etmek için middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

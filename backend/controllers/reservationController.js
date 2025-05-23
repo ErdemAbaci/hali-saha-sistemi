@@ -114,10 +114,26 @@ async function cancelReservation(req, res) {
       .json({ message: "Sunucu hatası, lütfen daha sonra tekrar deneyin." });
   }
 }
+// Rezervasyonları listele
+async function getAllReservations(req, res) {
+  try {
+    const query = req.user.role === "admin" ? {} : { user: req.user.id };
 
-// Exportlar
+    const reservations = await Reservation.find(query).populate(
+      "user",
+      "name email"
+    );
+
+    res.status(200).json(reservations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Rezervasyonlar alınamadı", error });
+  }
+}
+
 module.exports = {
   createReservation,
   getAvailableHours,
   cancelReservation,
+  getAllReservations,
 };
