@@ -5,6 +5,10 @@ const connectDB = require("./config/db");
 const authRoutes = require("../backend/routes/authRoutes");
 const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");
+<<<<<<< HEAD
+=======
+const reservationRoutes = require("../backend/routes/reservationRoutes");
+>>>>>>> seyhan
 const path = require("path");
 
 // .env dosyasını yükle
@@ -20,7 +24,11 @@ app.use((req, res, next) => {
   next();
 });
 // Frontend kodlarını serve etmek için middleware
+<<<<<<< HEAD
 app.use(express.static(path.join(__dirname,"../frontend")));
+=======
+app.use(express.static(path.join(__dirname, "../frontend")));
+>>>>>>> seyhan
 // JSON gövdelerini parse etmek için middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +37,9 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("API çalışıyor...");
 });
+
+//reservation Routes
+app.use("/api/reservations", reservationRoutes);
 
 //Auth Route
 app.use("/api/auth", authRoutes);
