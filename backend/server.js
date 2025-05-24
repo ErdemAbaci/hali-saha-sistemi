@@ -2,6 +2,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const verifyToken = require("./middleware/verifyToken");
+
+//Routes
 const authRoutes = require("../backend/routes/authRoutes");
 const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");

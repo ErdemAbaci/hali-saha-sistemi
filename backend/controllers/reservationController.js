@@ -84,6 +84,28 @@ async function getAvailableHours(req, res) {
   }
 }
 
+// Kullanıcının rezervasyonlarını getir
+async function getUserReservations(req,res){
+  try{
+    const userId = req.user.id;
+
+    const reservations = await Reservation.find({user:userId})
+    .populate("field","name locaiton")
+    .sort({createdAt:"desc"});
+    res.status(200).json({
+      message:"Kullanıcının rezervasyonları",
+      reservations
+    })
+  }catch(error){
+    console.error(error);
+    res.status(500).json({
+      message:"Sunucu hatası, lütfen daha sonra tekrar deneyin."
+    });
+
+  }
+
+}
+
 // Rezervasyon iptali
 async function cancelReservation(req, res) {
   try {
@@ -119,5 +141,6 @@ async function cancelReservation(req, res) {
 module.exports = {
   createReservation,
   getAvailableHours,
+  getUserReservations,
   cancelReservation,
 };
