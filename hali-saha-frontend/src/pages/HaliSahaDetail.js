@@ -21,7 +21,7 @@ function HaliSahaDetail() {
     const fetchHaliSahaDetails = async () => {
       try {
         // Bu URL'i kendi backend API'nizin endpoint'ine göre değiştirin
-        const response = await axios.get(`http://localhost:3001/api/hallsahalar/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/fields/${id}`);
         setHaliSaha(response.data);
         // İlk saha otomatik seçilebilir
         if (response.data.fields && response.data.fields.length > 0) {
@@ -53,7 +53,7 @@ function HaliSahaDetail() {
         const formattedDate = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD
         // Bu URL'i kendi backend API'nizin endpoint'ine göre değiştirin
         const response = await axios.get(
-          `http://localhost:3001/api/hallsahalar/${halisaha.id}/available-slots`,
+          `http://localhost:5000/api/fields/${halisaha.id}/available-slots`,
           {
             params: {
               date: formattedDate,

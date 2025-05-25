@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   getAllFields,
+  getFieldById,
   createField,
   updateField,
   deleteField,
@@ -13,6 +14,9 @@ router.get("/", getAllFields);
 
 // Halısaha ekle
 router.post("/", createField);
+
+// Tek bir halısaha detayını getir
+router.get("/:id", getFieldById);
 
 // Halısaha güncelle
 router.put("/:id", updateField);

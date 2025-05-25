@@ -14,7 +14,7 @@ function HomePage() {
   useEffect(() => {
     const fetchHalisahalar = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/halisahalar');
+        const response = await axios.get('http://localhost:5000/api/fields');
         setHalisahalar(response.data);
       } catch (err) {
         setError('Halısahalar yüklenirken bir hata oluştu.');

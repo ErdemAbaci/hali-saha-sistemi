@@ -51,4 +51,17 @@ const deleteField = async (req, res) => {
   }
 };
 
-module.exports = { getAllFields, createField, updateField, deleteField };
+const getFieldById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const fieldData = await field.findById(id);
+    if (!fieldData) {
+      return res.status(404).json({ message: "Halısaha bulunamadı" });
+    }
+    res.status(200).json(fieldData);
+  } catch (error) {
+    res.status(500).json({ message: "Halısaha detayları alınırken hata oluştu", error });
+  }
+};
+
+module.exports = { getAllFields, createField, updateField, deleteField, getFieldById };

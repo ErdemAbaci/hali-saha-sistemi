@@ -10,7 +10,7 @@ const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");
 const reservationRoutes = require("../backend/routes/reservationRoutes");
 const path = require("path");
-
+const cors = require("cors");
 // .env dosyasını yükle
 dotenv.config();
 
@@ -24,8 +24,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Frontend kodlarını serve etmek için middleware
-app.use(express.static(path.join(__dirname, "../frontend")));
+// CORS ayarları
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
 // JSON gövdelerini parse etmek için middleware
 app.use(express.json());
