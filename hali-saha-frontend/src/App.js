@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import HaliSahaDetail from './pages/HaliSahaDetail'; // Düzeltildi: HaliSahaDetails -> HaliSahaDetail
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        {/* Opsiyonel: Global Header veya Navbar */}
+        {/* <Header /> */}
+        <Switch> {/* Routes yerine Switch kullan */}
+          <Route path="/" exact component={HomePage} /> {/* exact ve component prop'u */}
+          <Route path="/halisaha/:id" component={HaliSahaDetail} />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/signup" component={SignupPage} />
+          <Route component={() => <h1>404 - Sayfa Bulunamadı</h1>} /> {/* Hata sayfası */}
+        </Switch>
+        {/* Opsiyonel: Global Footer */}
+        {/* <Footer /> */}
+      </div>
+    </Router>
   );
 }
 

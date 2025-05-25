@@ -1,0 +1,60 @@
+/* src/pages/HomePage.css */
+
+.home-page-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.halisaha-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.halisaha-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease-in-out;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.halisaha-card:hover {
+    transform: translateY(-5px);
+}
+
+.halisaha-card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.halsaha-card-content {
+    padding: 15px;
+    flex-grow: 1; /* İçeriğin kartı doldurmasını sağlar */
+    text-align: left;
+}
+
+.halisaha-card-content h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.halisaha-card-content p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.halisaha-card-content .price {
+    font-weight: bold;
+    color: #28a745;
+    margin-top: 10px;
+}
