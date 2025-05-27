@@ -13,6 +13,7 @@ oluşturup içini sadece auth-container ve auth-box gibi genel stillerle doldura
 function SignupPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');  // Telefon numarası state'i ekle
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
@@ -29,10 +30,12 @@ function SignupPage() {
 
     try {
       // Bu URL'i kendi backend API'nizin signup endpoint'ine göre değiştirin
-      const response = await axios.post('http://localhost:3001/api/auth/signup', {
-        username,
+      await axios.post('http://localhost:5000/api/auth/register', {
+        name: username,
         email,
+        phone,
         password,
+        confirmPassword
       });
 
       alert('Kayıt başarılı! Lütfen giriş yapın.');

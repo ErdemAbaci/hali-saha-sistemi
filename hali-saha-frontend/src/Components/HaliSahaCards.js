@@ -7,9 +7,9 @@ import { Link } from 'react-router-dom';
 // src/components/HallsahaCard.css oluşturup buraya import edebilirsin.
 // import './HallsahaCard.css';
 
-function HalisahaCard({ halisaha: halisaha }) {
+function HalisahaCards({ halisaha: halisaha }) {
   return (
-    <Link to={`/halisaha/${halisaha.id}`} className="haisaha-card">
+    <Link to={`/halisaha/${halisaha.id}`} className="halisaha-card">
       <img
         src={halisaha.imageUrl || 'https://via.placeholder.com/300x180?text=Halısaha'}
         alt={halisaha.name}
@@ -26,4 +26,4 @@ function HalisahaCard({ halisaha: halisaha }) {
   );
 }
 
-export default HalisahaCard;
+export default HalisahaCards;

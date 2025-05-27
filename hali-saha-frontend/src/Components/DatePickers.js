@@ -3,7 +3,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // DatePicker'ın kendi CSS'i
 
-function DatePicker({ selectedDate, handleDateChange }) {
+function DatePickers({ selectedDate, handleDateChange }) {
   return (
     <div className="date-selection">
       <h4>Select a date:</h4>
@@ -19,4 +19,4 @@ function DatePicker({ selectedDate, handleDateChange }) {
   );
 }
 
-export default DatePicker;
+export default DatePickers;
