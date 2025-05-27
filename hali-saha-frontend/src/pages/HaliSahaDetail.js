@@ -10,7 +10,7 @@ function HaliSahaDetail() {
   const { id } = useParams(); // URL'den halısaha ID'sini al
   const [halisaha, setHaliSaha] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedField, setSelectedField] = useState(null); // 'Saha 1', 'Saha 2' gibi
+  const [selectedField, setSelectedField] = useState(null); // '1', '2', '3' gibi olacak
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null); // Kullanıcının seçtiği saat dilimi
   const [loading, setLoading] = useState(true);
@@ -57,7 +57,7 @@ function HaliSahaDetail() {
           {
             params: {
               date: formattedDate,
-              fieldName: selectedField,
+              fieldNumber: selectedField,
             },
           }
         );
@@ -78,12 +78,12 @@ function HaliSahaDetail() {
     setSelectedTimeSlot(null); // Tarih değişince seçili saati sıfırla
   };
 
-  const handleFieldSelect = (fieldName) => {
-    if (halisaha.fields.find(f => f.name === fieldName && !f.available)) {
+  const handleFieldSelect = (fieldNumber) => {
+    if (halisaha.fields.find(f => f.name === fieldNumber && !f.available)) {
         // Saha müsait değilse seçimi engelle
         return;
     }
-    setSelectedField(fieldName);
+    setSelectedField(fieldNumber);
     setSelectedTimeSlot(null); // Saha değişince seçili saati sıfırla
   };
 
@@ -185,15 +185,13 @@ function HaliSahaDetail() {
 
           <div className="field-selection">
             <h4>Select a field:</h4>
-            {halisaha.fields && halisaha.fields.map((field) => (
+            {halisaha.fields && halisaha.fields.map((fieldNumber) => (
               <div
-                key={field.name}
-                className={`field-option ${selectedField === field.name ? 'selected' : ''} ${!field.available ? 'disabled' : ''}`}
-                onClick={() => handleFieldSelect(field.name)}
+                key={fieldNumber}
+                className={`field-option ${selectedField === fieldNumber ? 'selected' : ''}`}
+                onClick={() => handleFieldSelect(fieldNumber)}
               >
-                {field.name}
-                {!field.available && <br />}
-                {!field.available && <span style={{fontSize: '0.8em', color: '#aaa'}}>Not available</span>}
+                Saha {fieldNumber}
               </div>
             ))}
           </div>
