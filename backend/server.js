@@ -2,10 +2,19 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const verifyToken = require("./middleware/verifyToken");
+
+//Routes
 const authRoutes = require("../backend/routes/authRoutes");
 const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");
+<<<<<<< HEAD
 
+=======
+const reservationRoutes = require("../backend/routes/reservationRoutes");
+const path = require("path");
+const cors = require("cors");
+>>>>>>> master
 // .env dosyasını yükle
 dotenv.config();
 
@@ -20,9 +29,17 @@ app.use((req, res, next) => {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // Frontend kodlarını serve etmek için middleware
 app.use(express.static(path.join(__dirname, "../frontend")));
+=======
+// CORS ayarları
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+>>>>>>> master
 
 >>>>>>> master
 // JSON gövdelerini parse etmek için middleware
