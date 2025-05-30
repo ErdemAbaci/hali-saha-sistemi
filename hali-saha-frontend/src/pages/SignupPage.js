@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function SignupPage() {
@@ -10,7 +10,7 @@ function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ function SignupPage() {
       });
 
       alert('Kayıt başarılı! Lütfen giriş yapın.');
-      history.push('/login');
+      navigate('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Kayıt olunurken bir hata oluştu.');
       console.error('Signup Error:', err.response || err);
@@ -49,7 +49,7 @@ function SignupPage() {
         <div className="auth-header-container">
           <Link to="/" className="auth-brand">
             <span className="brand-icon">⚽</span>
-            <span className="brand-text">FormaGoli</span>
+            <span className="brand-text">FormaGolü</span>
           </Link>
         </div>
       </header>
@@ -64,17 +64,17 @@ function SignupPage() {
             </div>
             
             {/* Title */}
-            <h1 className="auth-title">Create an Account</h1>
-            <p className="auth-subtitle">Sign up to start booking football fields</p>
+            <h1 className="auth-title">Hesap Oluşturun</h1>
+            <p className="auth-subtitle">Halısaha rezervasyonu yapmaya başlamak için hesap oluşturun</p>
             
             {/* Form */}
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">👤</span>
+                  <span className="input-icon"></span>
                   <input
                     type="text"
-                    placeholder="Full Name"
+                    placeholder="Adı-Soyadı"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -85,10 +85,10 @@ function SignupPage() {
               
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">📧</span>
+                  <span className="input-icon"></span>
                   <input
                     type="email"
-                    placeholder="Email Address"
+                    placeholder="Email Adresi"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -99,10 +99,10 @@ function SignupPage() {
               
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">📞</span>
+                  <span className="input-icon"></span>
                   <input
                     type="text"
-                    placeholder="Phone Number"
+                    placeholder="Telefon Numarası"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     required
@@ -113,10 +113,10 @@ function SignupPage() {
               
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                  <span className="input-icon"></span>
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="Şifre"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -127,10 +127,10 @@ function SignupPage() {
               
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                  <span className="input-icon"></span>
                   <input
                     type="password"
-                    placeholder="Confirm Password"
+                    placeholder="Şifreyi Doğrulayın"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
@@ -146,13 +146,13 @@ function SignupPage() {
                 className="auth-submit-btn"
                 disabled={loading}
               >
-                {loading ? 'Creating Account...' : 'Create Account'}
+                {loading ? 'Hesap Oluşturuluyor...' : 'Hesap Oluştur'}
               </button>
             </form>
             
             {/* Footer Link */}
             <div className="auth-footer">
-              Already have an account? <Link to="/login" className="auth-link">Sign In</Link>
+              Zaten bir hesabınız var mı? <Link to="/login" className="auth-link">Giriş Yap</Link>
             </div>
           </div>
         </div>

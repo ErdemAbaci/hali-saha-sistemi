@@ -4,6 +4,6 @@
     "mongodb": "^6.16.0",
     "mongoose": "^8.15.0",
     "react-datepicker": "^8.4.0",
-    "react-router-dom": "^5.3.0"
+    "react-router-dom": "^7.6.1"
   }
 }
