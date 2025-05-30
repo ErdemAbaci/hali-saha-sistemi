@@ -51,10 +51,11 @@ app.use("/api/fields", fieldRoutes);
 //User Route
 app.use("/api/user", userRoutes);
 
-app.use(express.static(path.join(__dirname, '../hali-saha-frontend/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../hali-saha-frontend/build', 'index.html'));
-});
+// Production'da aktif edilecek
+// app.use(express.static(path.join(__dirname, '../hali-saha-frontend/build')));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../hali-saha-frontend/build', 'index.html'));
+// });
 
 app.listen(PORT, () => {
   console.log(`🚀 Server ${PORT} portunda çalışıyor`);
