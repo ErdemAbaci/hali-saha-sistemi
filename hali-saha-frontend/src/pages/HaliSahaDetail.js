@@ -41,6 +41,7 @@ function HaliSahaDetail() {
   }, [id]);
 
   // 2. Seçilen tarih ve sahaya göre uygun saat dilimlerini çek
+  // İkinci useEffect içinde
   useEffect(() => {
     const fetchAvailableSlots = async () => {
       if (!selectedDate || !selectedField || !halisaha) {
@@ -52,7 +53,6 @@ function HaliSahaDetail() {
       setError(null);
       try {
         const formattedDate = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD
-        // Bu URL'i kendi backend API'nizin endpoint'ine göre değiştirin
         const response = await axios.get(
           `http://localhost:5000/api/fields/${id}/available-slots`,
           {

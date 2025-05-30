@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-
 function HalisahaCards({ halisaha }) {
   return (
     <Link to={`/halisaha/${halisaha._id}`} className="halisaha-card">

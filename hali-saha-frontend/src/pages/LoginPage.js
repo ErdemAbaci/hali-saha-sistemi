@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function LoginPage() {
@@ -7,7 +7,7 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post('http://localhost:3001/api/auth/login', {
         email,
         password,
       });
@@ -25,7 +25,7 @@ function LoginPage() {
       localStorage.setItem('user', JSON.stringify(user));
 
       alert('Giriş başarılı!');
-      history.push('/');
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Giriş yapılırken bir hata oluştu.');
       console.error('Login Error:', err.response || err);
@@ -56,14 +56,13 @@ function LoginPage() {
             </div>
             
             {/* Title */}
-            <h1 className="auth-title">Hoşgeldin!</h1>
-            <p className="auth-subtitle">Devam etmek için hesabına giriş yap</p>
-            
+            <h1 className="auth-title">Hoşgeldiniz!</h1>
+            <p className="auth-subtitle">Devam etmek için giriş yapın</p>
             {/* Form */}
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">📧</span>
+                  <span className="input-icon"></span>
                   <input
                     type="email"
                     placeholder="Email Adresi"
@@ -77,7 +76,7 @@ function LoginPage() {
               
               <div className="form-group">
                 <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                  <span className="input-icon"></span>
                   <input
                     type="password"
                     placeholder="Şifre"
@@ -96,7 +95,7 @@ function LoginPage() {
                 className="auth-submit-btn"
                 disabled={loading}
               >
-                {loading ? 'Signing In...' : 'Sign In'}
+                {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
               </button>
             </form>
             
