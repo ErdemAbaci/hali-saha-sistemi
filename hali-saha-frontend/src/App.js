@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import HaliSahaDetail from './pages/HaliSahaDetail'; // Düzeltildi: HaliSahaDetails -> HaliSahaDetail
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import 'react-datepicker/dist/react-datepicker.css'
 import './App.css';
 
 function App() {

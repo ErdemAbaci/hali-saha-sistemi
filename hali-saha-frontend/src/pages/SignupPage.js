@@ -1,35 +1,29 @@
-// src/pages/SignupPage.js
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom'; // useNavigate yerine useHistory
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-
-// SignupPage.css (veya App.css'e eklenebilir)
-/*
-Bu CSS LoginPage.css ile aynı olabilir, çünkü genellikle login/signup sayfaları benzer stile sahiptir.
-Aynı stil dosyasını kullanmak istiyorsan, HomePage.css ve HallsahaDetail.css gibi ayrı bir LoginPage.css/SignupPage.css
-oluşturup içini sadece auth-container ve auth-box gibi genel stillerle doldurabilirsin.
-*/
 
 function SignupPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');  // Telefon numarası state'i ekle
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
-  const history = useHistory(); // useNavigate yerine useHistory hook'unu kullanıyoruz
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     if (password !== confirmPassword) {
       setError('Şifreler uyuşmuyor.');
+      setLoading(false);
       return;
     }
 
     try {
-      // Bu URL'i kendi backend API'nizin signup endpoint'ine göre değiştirin
       await axios.post('http://localhost:5000/api/auth/register', {
         name: username,
         email,
@@ -39,63 +33,128 @@ function SignupPage() {
       });
 
       alert('Kayıt başarılı! Lütfen giriş yapın.');
-      history.push('/login'); // Yönlendirme için history.push kullanıyoruz
+      history.push('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Kayıt olunurken bir hata oluştu.');
       console.error('Signup Error:', err.response || err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-box">
-        <h2>Kayıt Ol</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">Kullanıcı Adı</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+    <div className="auth-page">
+      {/* Header */}
+      <header className="auth-header">
+        <div className="auth-header-container">
+          <Link to="/" className="auth-brand">
+            <span className="brand-icon">⚽</span>
+            <span className="brand-text">FormaGoli</span>
+          </Link>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="auth-main">
+        <div className="auth-container">
+          <div className="auth-card">
+            {/* Icon */}
+            <div className="auth-icon">
+              <div className="shield-icon">🛡️</div>
+            </div>
+            
+            {/* Title */}
+            <h1 className="auth-title">Hesap Oluştur</h1>
+            <p className="auth-subtitle">Halısaha tutmaya başlamak için hesabınızı oluşturun</p>
+            
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="auth-form">
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <span className="input-icon">👤</span>
+                  <input
+                    type="text"
+                    placeholder="Tam Adınız"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="form-input"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <span className="input-icon">📧</span>
+                  <input
+                    type="email"
+                    placeholder="Email Adresi"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="form-input"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <span className="input-icon">📞</span>
+                  <input
+                    type="text"
+                    placeholder="Telefon Numarası"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="form-input"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <span className="input-icon">🔒</span>
+                  <input
+                    type="password"
+                    placeholder="Şifre"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="form-input"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <span className="input-icon">🔒</span>
+                  <input
+                    type="password"
+                    placeholder="Şifreyi Onayla"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="form-input"
+                  />
+                </div>
+              </div>
+              
+              {error && <div className="error-message">{error}</div>}
+              
+              <button 
+                type="submit" 
+                className="auth-submit-btn"
+                disabled={loading}
+              >
+                {loading ? 'Creating Account...' : 'Create Account'}
+              </button>
+            </form>
+            
+            {/* Footer Link */}
+            <div className="auth-footer">
+              Hesabınız Var mı? <Link to="/login" className="auth-link">Giriş Yap</Link>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="email">E-posta</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Şifre</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Şifreyi Onayla</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="auth-button">Kayıt Ol</button>
-        </form>
-        <div className="auth-link">
-          Zaten hesabın var mı? <Link to="/login">Giriş Yap</Link>
         </div>
       </div>
     </div>

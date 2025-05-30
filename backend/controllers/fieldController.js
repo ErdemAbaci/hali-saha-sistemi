@@ -70,6 +70,10 @@ const getAvailableSlots = async (req, res) => {
     const { id } = req.params; // Halı saha id'si
     const { date, fieldNumber } = req.query; // Tarih ve saha numarası
 
+    if (!date || !fieldNumber) {
+      return res.status(400).json({ message: "Tarih ve saha numarası gereklidir" });
+    }
+
     const allSlots = [
       "09:00", "10:00", "11:00", "12:00", "13:00",
       "14:00", "15:00", "16:00", "17:00", "18:00",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
+
 import 'react-datepicker/dist/react-datepicker.css'; // DatePicker CSS'ini import et
 
 import './HaliSahaDetail.css';
@@ -17,6 +18,7 @@ function HaliSahaDetail() {
   const [error, setError] = useState(null);
 
   // 1. Halısaha detaylarını çek
+  // İlk useEffect içinde
   useEffect(() => {
     const fetchHaliSahaDetails = async () => {
       try {
@@ -25,8 +27,7 @@ function HaliSahaDetail() {
         setHaliSaha(response.data);
         // İlk saha otomatik seçilebilir
         if (response.data.fields && response.data.fields.length > 0) {
-          const defaultField = response.data.fields.find(f => f.available) || response.data.fields[0];
-          setSelectedField(defaultField.name);
+          setSelectedField(response.data.fields[0].toString());
         }
       } catch (err) {
         setError('Halısaha detayları yüklenirken bir hata oluştu.');
@@ -53,7 +54,7 @@ function HaliSahaDetail() {
         const formattedDate = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD
         // Bu URL'i kendi backend API'nizin endpoint'ine göre değiştirin
         const response = await axios.get(
-          `http://localhost:5000/api/fields/${halisaha.id}/available-slots`,
+          `http://localhost:5000/api/fields/${id}/available-slots`,
           {
             params: {
               date: formattedDate,
@@ -71,7 +72,21 @@ function HaliSahaDetail() {
     };
 
     fetchAvailableSlots();
-  }, [selectedDate, selectedField, halisaha]); // hallsaha da bağımlılık olarak eklenmeli
+  }, [selectedDate, selectedField, halisaha, id]);
+
+  // Field selection kısmında
+  <div className="field-selection">
+    <h4>Select a field:</h4>
+    {halisaha.fields && halisaha.fields.map((fieldNumber) => (
+      <div
+        key={fieldNumber}
+        className={`field-option ${selectedField === fieldNumber.toString() ? 'selected' : ''}`}
+        onClick={() => handleFieldSelect(fieldNumber.toString())}
+      >
+        Saha {fieldNumber}
+      </div>
+    ))}
+  </div>
 
   const handleDateChange = (date) => {
     setSelectedDate(date);

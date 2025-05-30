@@ -2,14 +2,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Bu CSS, src/pages/HomePage.css içinde zaten tanımlı.
-// Eğer HallsahaCard'ın kendi özel CSS'i olsun istersen,
-// src/components/HallsahaCard.css oluşturup buraya import edebilirsin.
-// import './HallsahaCard.css';
 
-function HalisahaCards({ halisaha: halisaha }) {
+function HalisahaCards({ halisaha }) {
   return (
-    <Link to={`/halisaha/${halisaha.id}`} className="halisaha-card">
+    <Link to={`/halisaha/${halisaha._id}`} className="halisaha-card">
       <img
         src={halisaha.imageUrl || 'https://via.placeholder.com/300x180?text=Halısaha'}
         alt={halisaha.name}
@@ -18,9 +14,9 @@ function HalisahaCards({ halisaha: halisaha }) {
       <div className="halisaha-card-content">
         <h3>{halisaha.name}</h3>
         <p>Adres: {halisaha.address}</p>
-        <p>Çalışma Saatleri: {halisaha.openingHours}</p>
+        <p>Çalışma Saatleri: {halisaha.operatingHours}</p>
         <p>Saha Sayısı: {halisaha.fieldCount}</p>
-        {halisaha.pricePerHour && <p className="price">{halisaha.pricePerHour} TL/saat</p>}
+        {halisaha.price && <p className="price">{halisaha.price} TL/saat</p>}
       </div>
     </Link>
   );
