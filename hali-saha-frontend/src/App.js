@@ -6,6 +6,9 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import SahalarPage from './pages/SahalarPage';
 import NasilCalisirPage from './pages/NasilCalisirPage';
+import ContactPage from './pages/ContactPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import TermsPage from './pages/TermsPage';
 import './App.css';
 
 function App() {
@@ -21,6 +24,9 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/sahalar" element={<SahalarPage />} />
           <Route path="/nasil-calisir" element={<NasilCalisirPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/help" element={<HelpCenterPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="*" element={<h1>404 - Sayfa Bulunamadı</h1>} />
         </Routes>
         {/* Opsiyonel: Global Footer */}

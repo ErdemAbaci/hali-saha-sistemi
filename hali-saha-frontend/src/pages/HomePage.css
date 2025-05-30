@@ -219,8 +219,17 @@
 }
 
 .step {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
   text-align: center;
-  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.step:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .step-icon {
@@ -557,8 +566,17 @@
 }
 
 .step {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
   text-align: center;
-  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.step:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .step-icon {
