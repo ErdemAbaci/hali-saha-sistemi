@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 
@@ -16,13 +16,19 @@ function HaliSahaDetail() {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null); // Kullanıcının seçtiği saat dilimi
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Kullanıcı giriş durumu state'i
+  const navigate = useNavigate(); // navigate hookunu kullanmak için
+
+  // Kullanıcı giriş yapmış mı kontrol et
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
+    setIsLoggedIn(!!userToken); // token varsa true, yoksa false
+  }, []);
 
   // 1. Halısaha detaylarını çek
-  // İlk useEffect içinde
   useEffect(() => {
     const fetchHaliSahaDetails = async () => {
       try {
-        // Bu URL'i kendi backend API'nizin endpoint'ine göre değiştirin
         const response = await axios.get(`http://localhost:5000/api/fields/${id}`);
         setHaliSaha(response.data);
         // İlk saha otomatik seçilebilir
@@ -41,7 +47,6 @@ function HaliSahaDetail() {
   }, [id]);
 
   // 2. Seçilen tarih ve sahaya göre uygun saat dilimlerini çek
-  // İkinci useEffect içinde
   useEffect(() => {
     const fetchAvailableSlots = async () => {
       if (!selectedDate || !selectedField || !halisaha) {
@@ -74,30 +79,16 @@ function HaliSahaDetail() {
     fetchAvailableSlots();
   }, [selectedDate, selectedField, halisaha, id]);
 
-  // Field selection kısmında
-  <div className="field-selection">
-    <h4>Select a field:</h4>
-    {halisaha.fields && halisaha.fields.map((fieldNumber) => (
-      <div
-        key={fieldNumber}
-        className={`field-option ${selectedField === fieldNumber.toString() ? 'selected' : ''}`}
-        onClick={() => handleFieldSelect(fieldNumber.toString())}
-      >
-        Saha {fieldNumber}
-      </div>
-    ))}
-  </div>
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setSelectedTimeSlot(null); // Tarih değişince seçili saati sıfırla
   };
 
   const handleFieldSelect = (fieldNumber) => {
-    if (halisaha && halisaha.fields && halisaha.fields.find(f => f === fieldNumber && !f.available)) {
-        // Saha müsait değilse seçimi engelle
-        return;
-    }
+    // if (halisaha && halisaha.fields && halisaha.fields.find(f => f === fieldNumber && !f.available)) {
+    //     // Saha müsait değilse seçimi engelle
+    //     return;
+    // }
     setSelectedField(fieldNumber);
     setSelectedTimeSlot(null); // Saha değişince seçili saati sıfırla
   };
@@ -114,34 +105,20 @@ function HaliSahaDetail() {
       return;
     }
 
+    // Kullanıcı giriş yapmamışsa login sayfasına yönlendir
+    if (!isLoggedIn) {
+      alert('Rezervasyon yapmak için giriş yapmalısınız.');
+      navigate('/login');
+      return;
+    }
+
     // Rezervasyon işlemini backend'e gönder
-    // Bu kısım genellikle kullanıcı girişi gerektirir.
-    // Eğer kullanıcı girişi yoksa, önce login sayfasına yönlendirilebilir.
     console.log({
       halisahaId: halisaha.id,
       date: selectedDate.toISOString().split('T')[0],
       field: selectedField,
       timeSlot: selectedTimeSlot,
     });
-
-    // Örnek olarak bir rezervasyon API çağrısı:
-    // axios.post('http://localhost:3001/api/reservations', {
-    //   hallsahaId: hallsaha.id,
-    //   date: selectedDate.toISOString().split('T')[0],
-    //   field: selectedField,
-    //   timeSlot: selectedTimeSlot,
-    //   userId: 'current_user_id' // Giriş yapmış kullanıcının ID'si
-    // })
-    // .then(response => {
-    //   alert('Rezervasyonunuz başarıyla oluşturuldu!');
-    //   // Başarılı olursa saat dilimlerini yeniden çek veya state'i güncelle
-    //   // fetchAvailableSlots();
-    //   setSelectedTimeSlot(null); // Seçimi temizle
-    // })
-    // .catch(err => {
-    //   alert('Rezervasyon oluşturulurken bir hata oluştu: ' + (err.response?.data?.message || err.message));
-    //   console.error('Rezervasyon Hatası:', err);
-    // });
 
     alert(`Rezervasyon bilgileri:
       Halısaha: ${halisaha.name}
@@ -194,22 +171,23 @@ function HaliSahaDetail() {
               dateFormat="dd/MM/yyyy"
               minDate={new Date()} // Geçmiş tarihleri seçimi engeller
               inline // Takvimi her zaman gösterir
-              // highlightDates={[new Date(), new Date().setDate(new Date().getDate() + 1)]} // İstersen belirli tarihleri vurgula
             />
           </div>
 
-          <div className="field-selection">
-            <h4>Select a field:</h4>
-            {halisaha.fields && halisaha.fields.map((fieldNumber) => (
-              <div
-                key={fieldNumber}
-                className={`field-option ${selectedField === fieldNumber ? 'selected' : ''}`}
-                onClick={() => handleFieldSelect(fieldNumber)}
-              >
-                Saha {fieldNumber}
-              </div>
-            ))}
-          </div>
+          {halisaha && halisaha.fields && (
+            <div className="field-selection">
+              <h4>Select a field:</h4>
+              {halisaha.fields.map((fieldNumber) => (
+                <div
+                  key={fieldNumber}
+                  className={`field-option ${selectedField === fieldNumber ? 'selected' : ''}`}
+                  onClick={() => handleFieldSelect(fieldNumber)}
+                >
+                  Saha {fieldNumber}
+                </div>
+              ))}
+            </div>
+          )}
 
           {selectedDate && selectedField && ( // Tarih ve saha seçildiyse saatleri göster
             <div className="time-slot-selection">
@@ -244,7 +222,7 @@ function HaliSahaDetail() {
             onClick={handleBookClick}
             disabled={!selectedDate || !selectedField || !selectedTimeSlot} // Rezervasyon yapmak için hepsi seçili olmalı
           >
-            Login to Book
+            {isLoggedIn ? 'Book' : 'Login to Book'}
           </button>
         </div>
       </div>

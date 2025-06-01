@@ -9,6 +9,7 @@ import NasilCalisirPage from './pages/NasilCalisirPage';
 import ContactPage from './pages/ContactPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import TermsPage from './pages/TermsPage';
+import AccountPage from './pages/AccountPage';
 import './App.css';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/help" element={<HelpCenterPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/account" element={<AccountPage />} />
           <Route path="*" element={<h1>404 - Sayfa Bulunamadı</h1>} />
         </Routes>
         {/* Opsiyonel: Global Footer */}

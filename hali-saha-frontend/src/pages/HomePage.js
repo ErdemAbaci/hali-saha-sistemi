@@ -8,8 +8,27 @@ function HomePage() {
   const [halisahalar, setHalisahalar] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
+    const storedUser = localStorage.getItem('user');
+
+    if (userToken && storedUser) {
+      setIsLoggedIn(true);
+      try {
+        const user = JSON.parse(storedUser);
+        setUserName(user.name || '');
+      } catch (e) {
+        console.error("Failed to parse user from localStorage", e);
+        setUserName('');
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUserName('');
+    }
+
     const fetchHalisahalar = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/fields');
@@ -24,6 +43,14 @@ function HomePage() {
 
     fetchHalisahalar();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    setUserName('');
+    window.location.reload();
+  };
 
   return (
     <div className="homepage">
@@ -40,8 +67,20 @@ function HomePage() {
             <Link to="/nasil-calisir" className="nav-link">Nasıl Çalışır</Link>
           </nav>
           <div className="navbar-actions">
-            <Link to="/login" className="btn-login">Giriş Yap</Link>
-            <Link to="/signup" className="btn-signup">Kayıt Ol</Link>
+            {isLoggedIn ? (
+              <>
+                <Link to="/account" className="user-profile-link">
+                  <span className="user-name">{userName}</span>
+                  <div className="user-icon">👤</div>
+                </Link>
+                <button onClick={handleLogout} className="btn-signup">Çıkış Yap</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn-login">Giriş Yap</Link>
+                <Link to="/signup" className="btn-signup">Kayıt Ol</Link>
+              </>
+            )}
           </div>
         </div>
       </header>
