@@ -4,7 +4,10 @@ function HelpCenterPage() {
   return (
     <div>
       <h1>Yardım Merkezi</h1>
-      <p>Bu yardım merkezi sayfasıdır. İçeriği buraya ekleyebilirsiniz.</p>
+      <p>
+        Hali Saha'ya erişmek için, web sitesinin ana sayfasından "Hali Saha"
+        başlığına tıklayabilirsiniz.
+      </p>
     </div>
   );
 }
