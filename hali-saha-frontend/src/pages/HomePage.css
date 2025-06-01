@@ -297,6 +297,7 @@
   color: inherit;
   transition: all 0.3s ease;
   border: 1px solid #e9ecef;
+  position: relative;
 }
 
 .halisaha-card:hover {
@@ -331,7 +332,14 @@
   font-weight: bold;
   color: #28a745;
   font-size: 1.1rem;
-  margin-top: 1rem;
+  margin-top: 0;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Call to Action Section */
@@ -644,6 +652,7 @@
   color: inherit;
   transition: all 0.3s ease;
   border: 1px solid #e9ecef;
+  position: relative;
 }
 
 .halisaha-card:hover {
@@ -678,7 +687,14 @@
   font-weight: bold;
   color: #28a745;
   font-size: 1.1rem;
-  margin-top: 1rem;
+  margin-top: 0;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Call to Action Section */
@@ -808,4 +824,12 @@
     flex-direction: column;
     align-items: center;
   }
+}
+
+/* Halisaha Grid */
+.halisaha-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
 }
