@@ -26,7 +26,7 @@ function HaliSahaDetail() {
         const response = await axios.get(`http://localhost:5000/api/fields/${id}`);
         setHaliSaha(response.data);
         // İlk saha otomatik seçilebilir
-        if (response.data.fields && response.data.fields.length > 0) {
+        if (response.data && response.data.fields && response.data.fields.length > 0) {
           setSelectedField(response.data.fields[0].toString());
         }
       } catch (err) {
@@ -94,7 +94,7 @@ function HaliSahaDetail() {
   };
 
   const handleFieldSelect = (fieldNumber) => {
-    if (halisaha.fields.find(f => f.name === fieldNumber && !f.available)) {
+    if (halisaha && halisaha.fields && halisaha.fields.find(f => f === fieldNumber && !f.available)) {
         // Saha müsait değilse seçimi engelle
         return;
     }
