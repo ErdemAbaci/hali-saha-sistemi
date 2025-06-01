@@ -12,8 +12,8 @@ const getAllFields = async (req, res) => {
 
 const createField = async (req, res) => {
   try {
-    const { name, location, phone, price, fields } = req.body;
-    const newField = new field({ name, location, phone, price, fields });
+    const { name, location,address, phone, price, fields } = req.body;
+    const newField = new field({ name, location,address, phone, price, fields });
     await newField.save();
     res.status(201).json(newField);
   } catch (error) {
