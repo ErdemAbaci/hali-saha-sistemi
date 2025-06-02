@@ -14,6 +14,8 @@ import NasilCalisirPage from './pages/NasilCalisirPage';
 import ContactPage from './pages/ContactPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import TermsPage from './pages/TermsPage';
+import GizlilikPage from './pages/GizlilikPage';
+import SSSPage from './pages/SSSPage';
 import AccountPage from './pages/AccountPage';
 
 // Styles
@@ -155,6 +157,30 @@ const AnimatedRoutes = () => {
             className="min-h-screen flex flex-col"
           >
             <TermsPage />
+          </motion.div>
+        } />
+        
+        <Route path="/gizlilik-politikasi" element={
+          <motion.div
+            initial="initial"
+            animate="in"
+            exit="out"
+            variants={pageVariants}
+            className="min-h-screen flex flex-col"
+          >
+            <GizlilikPage />
+          </motion.div>
+        } />
+        
+        <Route path="/sss" element={
+          <motion.div
+            initial="initial"
+            animate="in"
+            exit="out"
+            variants={pageVariants}
+            className="min-h-screen flex flex-col"
+          >
+            <SSSPage />
           </motion.div>
         } />
         

@@ -38,10 +38,10 @@ const Footer = () => {
     {
       title: 'Yardım',
       links: [
-        { name: 'Yardım Merkezi', to: '/yardim' },
+        { name: 'Yardım Merkezi', to: '/yardim-merkezi' },
         { name: 'İletişim', to: '/iletisim' },
-        { name: 'Gizlilik Politikası', to: '/gizlilik' },
-        { name: 'Kullanım Koşulları', to: '/kullanim-kosullari' },
+        { name: 'Gizlilik Politikası', to: '/gizlilik-politikasi' },
+        { name: 'Kullanım Koşulları', to: '/sozlesmeler-ve-kurallar' },
       ],
     },
   ];
@@ -172,10 +172,10 @@ const Footer = () => {
               &copy; {currentYear} FormaGolü. Tüm hakları saklıdır.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
-              <Link to="/gizlilik" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
+              <Link to="/gizlilik-politikasi" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
                 Gizlilik Politikası
               </Link>
-              <Link to="/kullanim-kosullari" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
+              <Link to="/sozlesmeler-ve-kurallar" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
                 Kullanım Koşulları
               </Link>
               <Link to="/cerez-politikasi" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
