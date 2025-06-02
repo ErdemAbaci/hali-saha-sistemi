@@ -1,0 +1,225 @@
+/* src/pages/HallsahaDetail.css */
+
+.halisaha-detail-container {
+    padding: 20px;
+    max-width: 960px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Metin hizalaması */
+}
+
+.halisaha-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.halisaha-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .detail-grid {
+        grid-template-columns: 1fr; /* Küçük ekranlarda tek sütun */
+    }
+}
+
+.venue-details, .reservation-section {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fefefe;
+}
+
+.venue-details h3, .reservation-section h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.venue-details p {
+    margin: 8px 0;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.date-selection h4, .field-selection h4, .time-slot-selection h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+/* React-datepicker'ın kendi CSS'i import edildiği için burada sadece override etmeniz gerekenler olabilir */
+/* Eğer inline kullanıyorsanız, DatePicker'ın kendi class'larını hedefleyin */
+.react-datepicker-wrapper {
+    width: 100%;
+    margin-bottom: 20px; /* DatePicker ile saha seçimi arasına boşluk */
+}
+
+.react-datepicker__input-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.react-datepicker {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.react-datepicker__header {
+    background-color: #28a745; /* Yeşil tema */
+    color: white;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding-top: 8px;
+}
+
+.react-datepicker__current-month, .react-datepicker__day-name {
+    color: white;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    background-color: #28a745 !important; /* Seçili günün arka planı */
+    color: white !important;
+    border-radius: 50% !important;
+}
+
+.react-datepicker__day:hover {
+    background-color: #e6ffe6 !important; /* Günlerin üzerine gelince */
+    border-radius: 50% !important;
+}
+
+.react-datepicker__day--outside-month {
+    color: #ccc !important;
+}
+
+/* Saha seçimi */
+.field-selection {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Küçük ekranlarda alta geçsin */
+}
+
+.field-option {
+    padding: 15px 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    background-color: #f9f9f9;
+    flex: 1; /* Eşit genişlikte dağılsın */
+    min-width: 100px; /* Minimum genişlik */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.field-option.selected {
+    border-color: #28a745;
+    background-color: #e6ffe6;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+    font-weight: bold;
+}
+
+.field-option.disabled {
+    background-color: #f2f2f2;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Saat dilimi seçimi */
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.time-slot-button {
+    padding: 12px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    white-space: nowrap; /* Saat diliminin tek satırda kalmasını sağlar */
+}
+
+.time-slot-button:hover:not(:disabled) {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+.time-slot-button.booked {
+    background-color: #ffcccc;
+    color: #888;
+    border-color: #ff9999;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+
+.time-slot-button.selected-slot {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+    font-weight: bold;
+}
+
+.login-to-book-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.login-to-book-button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.login-to-book-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Yükleme ve hata mesajları */
+.loading-message, .error-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.error-message {
+    color: #dc3545; /* Kırmızı hata mesajı */
+}

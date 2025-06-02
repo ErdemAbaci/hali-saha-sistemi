@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './Components/layout/Navbar';
 import Footer from './Components/layout/Footer';
@@ -17,7 +17,7 @@ import TermsPage from './pages/TermsPage';
 import AccountPage from './pages/AccountPage';
 
 // Styles
-import './index.css';
+import './index.css'; // Using index.css instead of App.css for Tailwind
 
 // Animation variants for page transitions
 const pageVariants = {
@@ -50,7 +50,7 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route index element={
+        <Route path="/" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -74,7 +74,7 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        <Route path="/giris" element={
+        <Route path="/login" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -86,7 +86,7 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        <Route path="/kayit" element={
+        <Route path="/signup" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -122,7 +122,7 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        <Route path="/iletisim" element={
+        <Route path="/contact" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -134,7 +134,7 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        <Route path="/yardim-merkezi" element={
+        <Route path="/help" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -146,7 +146,7 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        <Route path="/sozlesmeler-ve-kurallar" element={
+        <Route path="/terms" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -158,7 +158,7 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        <Route path="/hesabim" element={
+        <Route path="/account" element={
           <motion.div
             initial="initial"
             animate="in"
@@ -170,41 +170,48 @@ const AnimatedRoutes = () => {
           </motion.div>
         } />
         
-        {/* 404 - Not Found Route */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={
+          <motion.div
+            initial="initial"
+            animate="in"
+            exit="out"
+            variants={pageVariants}
+            className="min-h-screen flex flex-col items-center justify-center bg-gray-50"
+          >
+            <div className="text-center p-8 max-w-2xl mx-auto">
+              <h1 className="text-6xl font-bold text-primary-600 mb-4">404</h1>
+              <h2 className="text-3xl font-semibold text-gray-800 mb-4">Sayfa Bulunamadı</h2>
+              <p className="text-gray-600 mb-8">
+                Aradığınız sayfa taşınmış veya kaldırılmış olabilir. Anasayfaya dönmek için aşağıdaki butonu kullanabilirsiniz.
+              </p>
+              <Link 
+                to="/" 
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+              >
+                Anasayfaya Dön
+              </Link>
+            </div>
+          </motion.div>
+        } />
       </Routes>
     </AnimatePresence>
   );
 };
 
-// 404 Page
-const NotFound = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
-    <div className="text-center">
-      <h1 className="text-6xl font-bold text-blue-600 mb-4">404</h1>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Sayfa Bulunamadı</h2>
-      <p className="text-gray-600 mb-8">
-        Aradığınız sayfa taşınmış veya kaldırılmış olabilir.
-      </p>
-      <a
-        href="/"
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Anasayfaya Dön
-      </a>
-    </div>
-  </div>
-);
-
 // Main App component
-const App = () => {
+function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="flex flex-col min-h-screen bg-gray-50">
+        {/* Navigation */}
         <Navbar />
-        <main className="flex-grow pt-16"> 
+        
+        {/* Main Content */}
+        <main className="flex-grow pt-16">
           <AnimatedRoutes />
         </main>
+        
+        {/* Footer */}
         <Footer />
       </div>
     </Router>

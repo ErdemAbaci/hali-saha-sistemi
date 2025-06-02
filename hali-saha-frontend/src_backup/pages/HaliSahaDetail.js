@@ -5,63 +5,29 @@ import DatePicker from 'react-datepicker';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Clock, Phone, Mail, Star, Calendar, ArrowLeft, Loader2, AlertCircle, CheckCircle, X } from 'lucide-react';
 
+// Import animations
+import { fadeIn, slideIn, staggerContainer } from '../utils/animations';
+
 // Import styles
 import 'react-datepicker/dist/react-datepicker.css'; // DatePicker CSS'ini import et
 import './HaliSahaDetail.css';
 
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      when: "beforeChildren",
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut"
-    }
-  }
-};
-
-const fadeInUp = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut"
-    }
-  }
-};
-
 function HaliSahaDetail() {
   const { id } = useParams(); // URL'den halısaha ID'sini al
-  const navigate = useNavigate(); // navigate hook'u için
+  const navigate = useNavigate(); // navigate hookunu kullanmak için
 
   // State management
   const [halisaha, setHaliSaha] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedField, setSelectedField] = useState('1');
+  const [selectedField, setSelectedField] = useState('1'); // '1', '2', '3' gibi olacak
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null); // Kullanıcının seçtiği saat dilimi
   const [loading, setLoading] = useState(true);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [error, setError] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Kullanıcı giriş durumu state'i
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [animationComplete, setAnimationComplete] = useState(false);
 
   // Mock images for the gallery
   const [galleryImages] = useState([
@@ -70,26 +36,10 @@ function HaliSahaDetail() {
     'https://images.unsplash.com/photo-1579952363872-0d7e3ecee5a4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
   ]);
 
-  // Check if user is logged in
+  // Kullanıcı giriş yapmış mı kontrol et
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('userToken');
-      const userData = localStorage.getItem('user');
-      setIsLoggedIn(!!(token && userData));
-    };
-
-    // Check auth on mount
-    checkAuth();
-
-    // Listen for storage events to sync auth state across tabs
-    const handleStorageChange = (e) => {
-      if (e.key === 'userToken' || e.key === 'user' || e.key === null) {
-        checkAuth();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    const userToken = localStorage.getItem('userToken');
+    setIsLoggedIn(!!userToken); // token varsa true, yoksa false
   }, []);
 
   // 1. Halısaha detaylarını çek
@@ -166,182 +116,112 @@ function HaliSahaDetail() {
     }
   };
 
-  const handleBookClick = async () => {
-    if (!isLoggedIn) {
-      // Save booking details to session storage for after login
-      const bookingDetails = {
-        halisahaId: id,
-        date: selectedDate,
-        field: selectedField,
-        timeSlot: selectedTimeSlot,
-        from: window.location.pathname
-      };
-      sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
-      
-      // Redirect to login
-      navigate('/giris', { 
-        state: { 
-          from: window.location.pathname,
-          message: 'Rezervasyonunuzu tamamlamak için giriş yapın' 
-        } 
-      });
+  const handleBookClick = () => {
+    if (!selectedDate || !selectedField || !selectedTimeSlot) {
+      alert('Lütfen tarih, saha ve saat seçimi yapın.');
       return;
     }
 
-    // Proceed with booking if user is logged in
-    if (selectedDate && selectedField && selectedTimeSlot) {
-      try {
-        // Your existing booking logic here
-        const response = await axios.post('http://localhost:5000/api/reservations', {
-          halisahaId: id,
-          fieldNumber: selectedField,
-          date: selectedDate,
-          timeSlot: selectedTimeSlot
-        });
-        
-        // Show success message
-        setShowSuccess(true);
-        
-        // Show booking details
-        alert(`Rezervasyon bilgileri:\nTarih: ${selectedDate.toLocaleDateString()}\nSaha: ${selectedField}\nSaat: ${selectedTimeSlot}`);
-        
-        // Reset selections after booking
-        setSelectedDate(null);
-        setSelectedField(null);
-        setSelectedTimeSlot(null);
-        
-        // Clear any pending booking
-        sessionStorage.removeItem('pendingBooking');
-        
-      } catch (error) {
-        console.error('Rezervasyon hatası:', error);
-        setError(error.response?.data?.message || 'Rezervasyon yapılırken bir hata oluştu');
-        setShowError(true);
-      }
+    // Kullanıcı giriş yapmamışsa login sayfasına yönlendir
+    if (!isLoggedIn) {
+      alert('Rezervasyon yapmak için giriş yapmalısınız.');
+      navigate('/login');
+      return;
     }
+
+    // Rezervasyon işlemini backend'e gönder
+    console.log({
+      halisahaId: halisaha.id,
+      date: selectedDate.toISOString().split('T')[0],
+      field: selectedField,
+      timeSlot: selectedTimeSlot,
+    });
+
+    alert(`Rezervasyon bilgileri:
+      Halısaha: ${halisaha.name}
+      Tarih: ${selectedDate.toLocaleDateString()}
+      Saha: ${selectedField}
+      Saat: ${selectedTimeSlot}
+      (Bu sadece bir demodur, gerçek rezervasyon backend'e gönderilir)
+    `);
   };
 
   // Loading state
   if (loading) {
     return (
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="min-h-screen bg-gray-50 flex items-center justify-center p-4"
-      >
-        <motion.div 
-          variants={fadeInUp}
-          className="text-center"
-        >
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="text-center">
           <Loader2 className="w-12 h-12 text-green-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-700">Halı saha bilgileri yükleniyor...</p>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     );
   }
 
   // Error state
   if (error) {
     return (
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="min-h-screen bg-gray-50 flex items-center justify-center p-4"
-      >
-        <motion.div 
-          variants={fadeInUp}
-          className="max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6 text-center"
-        >
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6 text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Bir Hata Oluştu</h2>
           <p className="text-gray-600 mb-6">{error}</p>
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={() => window.location.reload()}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Tekrar Dene
-          </motion.button>
-        </motion.div>
-      </motion.div>
+          </button>
+        </div>
+      </div>
     );
   }
 
   // Not found state
   if (!halisaha) {
     return (
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4"
-      >
-        <motion.div
-          variants={fadeInUp}
-          className="text-center"
-        >
-          <AlertCircle className="w-16 h-16 text-yellow-500 mb-4 mx-auto" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6 text-center">
+          <AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Halı Saha Bulunamadı</h2>
-          <p className="text-gray-600 mb-6">Aradığınız halı saha bulunamadı veya silinmiş olabilir.</p>
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => navigate('/sahalar')}
+          <p className="text-gray-600 mb-6">Aradığınız halı saha bulunamadı veya erişilemiyor.</p>
+          <button
+            onClick={() => navigate('/')}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
-            Halı Sahalara Dön
-          </motion.button>
-        </motion.div>
-      </motion.div>
+            Ana Sayfaya Dön
+          </button>
+        </div>
+      </div>
     );
   }
 
   return (
     <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
       className="min-h-screen bg-gray-50"
+      initial="hidden"
+      animate="show"
+      variants={staggerContainer}
     >
-      {/* Back Button */}
-      <motion.button
-        variants={fadeInUp}
-        onClick={() => navigate(-1)}
-        className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
-      >
-        <ArrowLeft className="w-5 h-5" />
-        <span>Geri Dön</span>
-      </motion.button>
+      {/* Header with Back Button */}
+      <header className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 mr-1" />
+              <span>Geri Dön</span>
+            </button>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <motion.div
-          variants={itemVariants}
-          className="text-center mb-12"
-        >
-          <motion.h1 
-            variants={itemVariants}
-            className="text-3xl font-bold text-gray-900"
-          >
-            {halisaha.name}
-          </motion.h1>
-          <motion.p 
-            variants={itemVariants}
-            className="text-gray-600"
-          >
-            {halisaha.address}
-          </motion.p>
-        </motion.div>
-
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Venue Header */}
-        <motion.div
-          variants={itemVariants}
-          className="mb-8"
-        >
+        <motion.div variants={fadeIn('up', 'tween', 0.2, 1)} className="mb-8">
           <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mb-6">
             <img
               src={galleryImages[0]}
@@ -371,7 +251,7 @@ function HaliSahaDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Venue Details */}
           <motion.div 
-            variants={itemVariants}
+            variants={fadeIn('right', 'tween', 0.2, 1)}
             className="lg:col-span-2 space-y-8"
           >
             {/* About Section */}
@@ -450,7 +330,7 @@ function HaliSahaDetail() {
 
           {/* Booking Section */}
           <motion.div 
-            variants={itemVariants}
+            variants={fadeIn('left', 'tween', 0.2, 1)}
             className="lg:sticky lg:top-24 h-fit"
           >
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
@@ -546,39 +426,20 @@ function HaliSahaDetail() {
                   disabled={!selectedDate || !selectedField || !selectedTimeSlot}
                   className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
                     selectedDate && selectedField && selectedTimeSlot
-                      ? isLoggedIn 
-                        ? 'bg-green-600 hover:bg-green-700'
-                        : 'bg-blue-600 hover:bg-blue-700'
+                      ? 'bg-green-600 hover:bg-green-700'
                       : 'bg-gray-300 cursor-not-allowed'
                   }`}
                 >
-                  {!selectedDate || !selectedField || !selectedTimeSlot 
-                    ? 'Tarih, Saha ve Saat Seçin'
-                    : isLoggedIn 
-                      ? 'Rezervasyon Yap' 
-                      : 'Giriş Yap & Rezervasyon Yap'}
+                  {isLoggedIn ? 'Rezervasyon Yap' : 'Giriş Yap & Rezervasyon Yap'}
                 </button>
 
                 {/* Success/Error Messages */}
                 <AnimatePresence>
                   {showSuccess && (
                     <motion.div
-                      variants={{
-                        hidden: { opacity: 0, y: 10 },
-                        visible: { 
-                          opacity: 1, 
-                          y: 0,
-                          transition: { duration: 0.3 }
-                        },
-                        exit: { 
-                          opacity: 0, 
-                          y: -10,
-                          transition: { duration: 0.2 }
-                        }
-                      }}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
                       className="p-3 bg-green-50 text-green-800 text-sm rounded-lg flex items-start"
                     >
                       <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
@@ -586,35 +447,20 @@ function HaliSahaDetail() {
                         <p className="font-medium">Rezervasyon Başarılı!</p>
                         <p>Rezervasyonunuz alındı. Onay için e-posta adresinizi kontrol edin.</p>
                       </div>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
+                      <button
                         onClick={() => setShowSuccess(false)}
                         className="ml-auto text-green-500 hover:text-green-700"
                       >
                         <X className="w-5 h-5" />
-                      </motion.button>
+                      </button>
                     </motion.div>
                   )}
 
                   {showError && (
                     <motion.div
-                      variants={{
-                        hidden: { opacity: 0, y: 10 },
-                        visible: { 
-                          opacity: 1, 
-                          y: 0,
-                          transition: { duration: 0.3 }
-                        },
-                        exit: { 
-                          opacity: 0, 
-                          y: -10,
-                          transition: { duration: 0.2 }
-                        }
-                      }}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
                       className="p-3 bg-red-50 text-red-800 text-sm rounded-lg flex items-start"
                     >
                       <AlertCircle className="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
@@ -622,14 +468,12 @@ function HaliSahaDetail() {
                         <p className="font-medium">Hata Oluştu!</p>
                         <p>{error}</p>
                       </div>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
+                      <button
                         onClick={() => setShowError(false)}
                         className="ml-auto text-red-500 hover:text-red-700"
                       >
                         <X className="w-5 h-5" />
-                      </motion.button>
+                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -637,44 +481,32 @@ function HaliSahaDetail() {
             </div>
 
             {/* Price Info */}
-            <motion.div 
-              variants={itemVariants}
-              className="mt-6 bg-white rounded-2xl shadow-sm p-6"
-            >
+            <div className="mt-6 bg-white rounded-2xl shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Fiyat Bilgisi</h3>
-              <motion.div 
-                variants={containerVariants}
-                className="space-y-3"
-              >
-                <motion.div variants={itemVariants} className="flex justify-between">
+              <div className="space-y-3">
+                <div className="flex justify-between">
                   <span className="text-gray-600">1 Saatlik Kiralama</span>
                   <span className="font-medium">{halisaha.pricePerHour || 200} ₺</span>
-                </motion.div>
-                <motion.div variants={itemVariants} className="border-t border-gray-200 my-2"></motion.div>
-                <motion.div variants={itemVariants} className="flex justify-between font-medium">
+                </div>
+                <div className="border-t border-gray-200 my-2"></div>
+                <div className="flex justify-between font-medium">
                   <span>Toplam</span>
                   <span>{halisaha.pricePerHour || 200} ₺</span>
-                </motion.div>
-              </motion.div>
-            </motion.div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
-      </div>
+      </main>
 
       {/* Footer */}
-      <motion.footer 
-        variants={itemVariants}
-        className="bg-white border-t border-gray-200 mt-12"
-      >
-        <motion.div 
-          variants={itemVariants}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
-        >
+      <footer className="bg-white border-t border-gray-200 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-center text-sm text-gray-500">
             &copy; {new Date().getFullYear()} {halisaha.name}. Tüm hakları saklıdır.
           </p>
-        </motion.div>
-      </motion.footer>
+        </div>
+      </footer>
     </motion.div>
   );
 }
