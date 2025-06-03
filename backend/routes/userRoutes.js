@@ -1,40 +1,77 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
+const checkRole = require("../middleware/roleMiddleware");
+const User = require("../models/user");
 
-router.get("/profile", authMiddleware, (req, res) => {
-  res.json({ message: "Profil Bilgileri", user: req.user });
+// Kullanıcı profil bilgilerini getir
+router.get("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Sunucu hatası" });
+  }
 });
 
-router.put("/update", authMiddleware, (req, res) => {
-  const { name, email } = req.body;
+// Kullanıcı bilgilerini güncelle
+router.put("/update", authMiddleware, async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, email },
+      { new: true }
+    ).select("-password");
+    
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Sunucu hatası" });
+  }
+});
 
-  // Giriş yapan kullanıcının ID'si token'dan geliyor
-  const userId = req.user.id;
+// Admin paneli için kullanıcı listesi
+router.get("/admin/users", authMiddleware, checkRole(["admin"]), async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Sunucu hatası" });
+  }
+});
 
-  // Veritabanında kullanıcıyı bulup güncelle
-  const User = require("../models/user");
-  User.findByIdAndUpdate(
-    userId,
-    { name, email },
-    { new: true, runValidators: true }
-  )
-    .then((updatedUser) => {
-      res.json({
-        message: "Kullanıcı bilgileri güncellendi",
-        user: {
-          id: updatedUser._id,
-          name: updatedUser.name,
-          email: updatedUser.email,
-          role: updatedUser.role,
-        },
-      });
-    })
-    .catch((error) => {
-      res
-        .status(500)
-        .json({ message: "Güncelleme sırasında hata oluştu", error });
-    });
+// Operatör paneli için kullanıcı listesi
+router.get("/operator/users", authMiddleware, checkRole(["operator", "admin"]), async (req, res) => {
+  try {
+    const users = await User.find({ role: "customer" }).select("-password");
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Sunucu hatası" });
+  }
+});
+
+// Kullanıcı rolünü güncelle (sadece admin)
+router.put("/admin/users/:id/role", authMiddleware, checkRole(["admin"]), async (req, res) => {
+  try {
+    const { role } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true }
+    ).select("-password");
+    
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Sunucu hatası" });
+  }
 });
 
 module.exports = router;
