@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Lock, Mail, ArrowRight, Shield } from 'lucide-react';
 import Navbar from '../Components/layout/Navbar';
-import Footer from '../Components/layout/Footer';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -231,7 +230,6 @@ function LoginPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

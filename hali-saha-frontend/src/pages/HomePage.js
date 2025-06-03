@@ -39,11 +39,45 @@ const HomePage = () => {
     fetchHalisahalar();
   }, []);
 
-  // Get featured fields (first 4 fields from the fetched data)
-  const featuredFields = halisahalar.slice(0, 4).map(field => ({
-    ...field,
-    featured: true
-  }));
+  // Static featured fields with booking links
+  const staticFeaturedFields = [
+    {
+      id: '683c2ab2f1ea90f5ab55002b',
+      name: 'Fırat Halısaha',
+      location: 'Elazığ Merkez',
+      rating: 4.8,
+      reviewCount: 124,
+      price: 1380,
+      image: 'https://boluspor.org.tr/dacegug/2022/07/halisaha-tesisleri-1.jpg',
+      bookingUrl: 'http://localhost:3000/halisaha/683c2ab2f1ea90f5ab55002b',
+      featured: true
+    },
+    {
+      id: '683c2ae53872f190adde052e',
+      name: 'Sporium23 Halısaha',
+      location: 'Elazığ Merkez',
+      rating: 4.7,
+      reviewCount: 98,
+      price: 1440,
+      image: 'https://yasamzeminspor.com/wp-content/uploads/2021/06/Hali-Saha.jpg',
+      bookingUrl: 'http://localhost:3000/halisaha/683c2ae53872f190adde052e',
+      featured: true
+    },
+    {
+      id: '683c2b063872f190adde0530',
+      name: 'Futbol Times Halısaha',
+      location: 'Elazığ Merkez',
+      rating: 4.9,
+      reviewCount: 156,
+      price: 1380,
+      image: 'https://elazigtente.com.tr/wp-content/uploads/2021/08/eazig-hali-saha-cadir-2.jpg',
+      bookingUrl: 'http://localhost:3000/halisaha/683c2b063872f190adde0530',
+      featured: true
+    }
+  ];
+
+  // Use static featured fields instead of API data
+  const featuredFields = staticFeaturedFields;
 
   // Features data
   const features = [
@@ -232,32 +266,22 @@ const HomePage = () => {
             </Link>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-            </div>
-          ) : error ? (
-            <div className="text-center py-12">
-              <p className="text-red-600">{error}</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {halisahalar.map((saha) => (
-                <HaliSahaCard
-                  key={saha._id || saha.id}
-                  id={saha._id || saha.id}
-                  name={saha.name}
-                  location={saha.location || 'Konum bilgisi yok'}
-                  rating={saha.rating || 0}
-                  reviewCount={saha.reviewCount || 0}
-                  price={saha.price || 'Bilgi yok'}
-                  image={saha.image || 'https://via.placeholder.com/300x200?text=Halı+Saha'}
-                  fields={saha.fields || []}
-                  isAvailable={saha.isAvailable !== false}
-                />
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {staticFeaturedFields.map((saha) => (
+              <HaliSahaCard
+                key={saha.id}
+                id={saha.id}
+                name={saha.name}
+                location={saha.location}
+                rating={saha.rating}
+                reviewCount={saha.reviewCount}
+                price={saha.price}
+                image={saha.image}
+                isAvailable={true}
+                bookingUrl={saha.bookingUrl}
+              />
+            ))}
+          </div>
         </div>
       </section>
 

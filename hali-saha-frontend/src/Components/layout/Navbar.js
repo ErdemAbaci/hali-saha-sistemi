@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, LogIn, UserPlus, User, LogOut, Calendar, Home, Info, HelpCircle, Phone } from 'lucide-react';
+import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -2,13 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, Clock, ArrowRight } from 'lucide-react';
 
-const HaliSahaCard = ({ id, name, location, rating, reviewCount, price, image, fields, isAvailable = true }) => {
-  return (
-    <div className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
-      <div className="relative h-48">
+const HaliSahaCard = ({ id, name, location, rating, reviewCount, price, image, fields, isAvailable = true, bookingUrl }) => {
+  const handleCardClick = (e) => {
+    if (bookingUrl) {
+      e.preventDefault();
+      window.open(bookingUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const cardContent = (
+    <div 
+      className={`bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${bookingUrl ? 'cursor-pointer' : ''}`}
+      onClick={bookingUrl ? handleCardClick : undefined}
+    >
+      {/* Image Section */}
+      <div className="relative h-48 w-full">
         <img 
           src={image} 
-          alt={name} 
+          alt={name}
           className="w-full h-full object-cover"
         />
         {!isAvailable && (
@@ -19,22 +30,25 @@ const HaliSahaCard = ({ id, name, location, rating, reviewCount, price, image, f
           </div>
         )}
       </div>
-      
+
+      {/* Content Section */}
       <div className="p-4">
-        <div className="flex justify-between items-start">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{name}</h3>
-          <div className="flex items-center bg-green-50 text-green-800 text-xs font-medium px-2 py-1 rounded">
-            <span>{price} ₺</span>
-            <span className="text-gray-500 text-xs ml-1">/saat</span>
+        {/* Title and Price */}
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{name}</h3>
+          <div className="flex items-center bg-green-600 text-white text-sm font-medium px-2 py-1 rounded">
+            {price} ₺
           </div>
         </div>
-        
-        <div className="flex items-center mt-2 text-sm text-gray-600">
-          <MapPin className="w-4 h-4 mr-1 text-gray-400" />
+
+        {/* Location */}
+        <div className="flex items-center text-sm text-gray-600 mb-3">
+          <MapPin className="w-4 h-4 mr-1 text-gray-500" />
           <span className="line-clamp-1">{location}</span>
         </div>
-        
-        <div className="flex items-center mt-2">
+
+        {/* Rating */}
+        <div className="flex items-center mb-4">
           <div className="flex items-center">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star 
@@ -45,21 +59,29 @@ const HaliSahaCard = ({ id, name, location, rating, reviewCount, price, image, f
             <span className="text-sm text-gray-500 ml-1">({reviewCount})</span>
           </div>
         </div>
-        
-        <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <div className="flex items-center text-sm text-gray-500">
             <Clock className="w-4 h-4 mr-1" />
-            <span>{fields} Saha</span>
+            <span>24 Saat Açık</span>
           </div>
-          <Link 
-            to={`/saha/${id}`}
-            className="text-sm font-medium text-green-600 hover:text-green-700 flex items-center"
-          >
-            Detaylı Bilgi <ArrowRight className="w-4 h-4 ml-1" />
-          </Link>
+          <div className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center">
+            Detaylar <ArrowRight className="w-4 h-4 ml-1" />
+          </div>
         </div>
       </div>
     </div>
+  );
+
+  return bookingUrl ? (
+    <div className="h-full">
+      {cardContent}
+    </div>
+  ) : (
+    <Link to={`/saha/${id}`} className="block h-full">
+      {cardContent}
+    </Link>
   );
 };
 
