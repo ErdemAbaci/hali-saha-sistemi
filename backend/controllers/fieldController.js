@@ -12,43 +12,75 @@ const getAllFields = async (req, res) => {
 
 const createField = async (req, res) => {
   try {
-    const { name, location,address, phone, price, fields } = req.body;
-    const newField = new field({ name, location,address, phone, price, fields });
-    await newField.save();
-    res.status(201).json(newField);
+    const { name, location, address, price, phone, email, imageUrl, operatingHours, fieldCount, fields } = req.body;
+    
+    // İşletmeci ID'sini request'ten al
+    const operatorId = req.user._id;
+
+    const newField = new field({
+      name,
+      location,
+      address,
+      price,
+      phone,
+      email,
+      imageUrl,
+      operatingHours,
+      fieldCount,
+      fields,
+      operator: operatorId // İşletmeci ID'sini ekle
+    });
+
+    const savedField = await newField.save();
+    res.status(201).json(savedField);
   } catch (error) {
-    res.status(500).json({ message: "halısaha eklenirken hata oldu", error });
+    res.status(500).json({ message: "halısaha oluşturulurken hata oldu", error });
   }
 };
 
 const updateField = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedField = await field.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    if (!updatedField)
-      return res.status(404).json({ message: "halısaha bulunamadı" });
+    const operatorId = req.user._id;
+    const isAdmin = req.user.role === "admin";
 
+    // Admin tüm halı sahaları yönetebilir, operator sadece kendininkileri
+    const query = isAdmin ? { _id: id } : { _id: id, operator: operatorId };
+    const fieldToUpdate = await field.findOne(query);
+    
+    if (!fieldToUpdate) {
+      return res.status(404).json({ message: "Halı saha bulunamadı veya bu işlem için yetkiniz yok" });
+    }
+
+    const updatedField = await field.findByIdAndUpdate(
+      id,
+      { ...req.body, operator: isAdmin ? fieldToUpdate.operator : operatorId },
+      { new: true }
+    );
     res.status(200).json(updatedField);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "halısaha güncellenirken hata oldu", error });
+    res.status(500).json({ message: "Halı saha güncellenirken hata oluştu", error });
   }
 };
 
 const deleteField = async (req, res) => {
   try {
     const { id } = req.params;
+    const operatorId = req.user._id;
+    const isAdmin = req.user.role === "admin";
+
+    // Admin tüm halı sahaları silebilir, operator sadece kendininkileri
+    const query = isAdmin ? { _id: id } : { _id: id, operator: operatorId };
+    const fieldToDelete = await field.findOne(query);
+    
+    if (!fieldToDelete) {
+      return res.status(404).json({ message: "Halı saha bulunamadı veya bu işlem için yetkiniz yok" });
+    }
+
     const deletedField = await field.findByIdAndDelete(id);
-    if (!deletedField)
-      return res.status(404).json({ message: "halısaha bulunamadı" });
-    res.status(200).json({ message: "halısaha silindi" });
+    res.status(200).json({ message: "Halı saha başarıyla silindi" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "halıshaa silinirken bir hata oluştu", error });
+    res.status(500).json({ message: "Halı saha silinirken hata oluştu", error });
   }
 };
 

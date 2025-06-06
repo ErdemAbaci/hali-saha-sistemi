@@ -14,6 +14,7 @@ const fieldSchema = new mongoose.Schema(
     reviewsCount: { type: Number, default: 0 },
     fieldCount: { type: Number },
     fields: [{ type: Number }], // Örn: [1, 2, 3, 4] Halı sahası numaraları
+    operator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // İşletmeci referansı
   },
   { timestamps: true }
 );
