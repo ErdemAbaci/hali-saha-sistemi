@@ -49,7 +49,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/fields", fieldRoutes);
 
 //User Route
-app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 
 // Production'da aktif edilecek
 // app.use(express.static(path.join(__dirname, '../hali-saha-frontend/build')));

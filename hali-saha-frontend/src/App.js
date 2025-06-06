@@ -17,6 +17,11 @@ import TermsPage from './pages/TermsPage';
 import GizlilikPage from './pages/GizlilikPage';
 import SSSPage from './pages/SSSPage';
 import AccountPage from './pages/AccountPage';
+import AdminPage from './pages/AdminPage'; // Eklendi
+import OperatorPage from './pages/OperatorPage'; // Eklendi
+import NotFoundPage from './pages/NotFoundPage'; // Eklendi (veya NotFound olarak güncellendi)
+import PrivateRoute from './Components/common/PrivateRoute'; // Eklendi
+import { AuthProvider } from './context/AuthContext'; // AuthProvider eklendi
 
 // Styles
 import './index.css';
@@ -46,193 +51,65 @@ const pageVariants = {
 };
 
 // Wrapper component for page transitions
-const AnimatedRoutes = () => {
+const AnimatedRoutesWrapper = () => {
   const location = useLocation();
-
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route index element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <HomePage />
-          </motion.div>
-        } />
+        {/* Public Routes */}
+        <Route index element={<AnimatedPage><HomePage /></AnimatedPage>} />
+        <Route path="/halisaha/:id" element={<AnimatedPage><HaliSahaDetail /></AnimatedPage>} />
+        <Route path="/giris" element={<AnimatedPage><LoginPage /></AnimatedPage>} />
+        <Route path="/kayit" element={<AnimatedPage><SignupPage /></AnimatedPage>} />
+        <Route path="/sahalar" element={<AnimatedPage><SahalarPage /></AnimatedPage>} />
+        <Route path="/nasil-calisir" element={<AnimatedPage><NasilCalisirPage /></AnimatedPage>} />
+        <Route path="/iletisim" element={<AnimatedPage><ContactPage /></AnimatedPage>} />
+        <Route path="/yardim-merkezi" element={<AnimatedPage><HelpCenterPage /></AnimatedPage>} />
+        <Route path="/sozlesmeler-ve-kurallar" element={<AnimatedPage><TermsPage /></AnimatedPage>} />
+        <Route path="/gizlilik-politikasi" element={<AnimatedPage><GizlilikPage /></AnimatedPage>} />
+        <Route path="/sss" element={<AnimatedPage><SSSPage /></AnimatedPage>} />
         
-        <Route path="/halisaha/:id" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <HaliSahaDetail />
-          </motion.div>
-        } />
-        
-        <Route path="/giris" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <LoginPage />
-          </motion.div>
-        } />
-        
-        <Route path="/kayit" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <SignupPage />
-          </motion.div>
-        } />
-        
-        <Route path="/sahalar" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <SahalarPage />
-          </motion.div>
-        } />
-        
-        <Route path="/nasil-calisir" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <NasilCalisirPage />
-          </motion.div>
-        } />
-        
-        <Route path="/iletisim" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <ContactPage />
-          </motion.div>
-        } />
-        
-        <Route path="/yardim-merkezi" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <HelpCenterPage />
-          </motion.div>
-        } />
-        
-        <Route path="/sozlesmeler-ve-kurallar" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <TermsPage />
-          </motion.div>
-        } />
-        
-        <Route path="/gizlilik-politikasi" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <GizlilikPage />
-          </motion.div>
-        } />
-        
-        <Route path="/sss" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <SSSPage />
-          </motion.div>
-        } />
-        
-        <Route path="/hesabim" element={
-          <motion.div
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
-            className="min-h-screen flex flex-col"
-          >
-            <AccountPage />
-          </motion.div>
-        } />
-        
-        {/* 404 - Not Found Route */}
-        <Route path="*" element={<NotFound />} />
+        {/* Protected Routes */}
+        <Route path="/hesabim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />
+        <Route path="/admin" element={<PrivateRoute allowedRoles={['admin']}><AnimatedPage><AdminPage /></AnimatedPage></PrivateRoute>} />
+        <Route path="/operator" element={<PrivateRoute allowedRoles={['admin', 'operator']}><AnimatedPage><OperatorPage /></AnimatedPage></PrivateRoute>} />
+
+        {/* Not Found Route */}
+        <Route path="*" element={<AnimatedPage><NotFoundPage /></AnimatedPage>} />
       </Routes>
     </AnimatePresence>
   );
 };
 
-// 404 Page
-const NotFound = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
-    <div className="text-center">
-      <h1 className="text-6xl font-bold text-blue-600 mb-4">404</h1>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Sayfa Bulunamadı</h2>
-      <p className="text-gray-600 mb-8">
-        Aradığınız sayfa taşınmış veya kaldırılmış olabilir.
-      </p>
-      <a
-        href="/"
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Anasayfaya Dön
-      </a>
-    </div>
-  </div>
+// Wrapper component for page transitions, App.js'deki AnimatedRoutes yerine kullanılacak
+const AnimatedPage = ({ children }) => (
+  <motion.div
+    initial="initial"
+    animate="in"
+    exit="out"
+    variants={pageVariants}
+    className="min-h-screen flex flex-col"
+  >
+    {children}
+  </motion.div>
 );
 
-// Main App component
+
+
+
+
 const App = () => {
   return (
     <Router>
+      <AuthProvider> {/* AuthProvider ile tüm uygulamayı sarıyoruz */}
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow pt-16"> 
-          <AnimatedRoutes />
+          <AnimatedRoutesWrapper />
         </main>
         <Footer />
       </div>
+          </AuthProvider> {/* AuthProvider kapatma */} 
     </Router>
   );
 }

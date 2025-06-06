@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone } from 'lucide-react';
+import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone, Shield, Briefcase } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,13 +85,46 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const navLinks = [
+  // Dynamically generate navigation links based on user role
+  const baseNavLinks = [
     { name: 'Ana Sayfa', path: '/', icon: <Home className="w-5 h-5" /> },
     { name: 'Sahalar', path: '/sahalar', icon: <Calendar className="w-5 h-5" /> },
     { name: 'Nasıl Çalışır?', path: '/nasil-calisir', icon: <Info className="w-5 h-5" /> },
     { name: 'Yardım', path: '/yardim-merkezi', icon: <HelpCircle className="w-5 h-5" /> },
     { name: 'İletişim', path: '/iletisim', icon: <Phone className="w-5 h-5" /> },
   ];
+
+  let currentNavLinks = [...baseNavLinks];
+  // Ensure user object and user.role exist before trying to access them
+  if (user && typeof user.role === 'string') { 
+    const adminPanelLink = { 
+      name: 'Admin Paneli', 
+      path: '/admin', 
+      icon: <Shield className="w-5 h-5 mr-1" />, 
+      // Optional: Add specific styling for admin link
+      // className: 'text-purple-600 font-semibold'
+    };
+    const operatorPanelLink = { 
+      name: 'Operatör Paneli', 
+      path: '/operator', 
+      icon: <Briefcase className="w-5 h-5 mr-1" />, 
+      // Optional: Add specific styling for operator link
+      // className: 'text-teal-600 font-semibold'
+    };
+
+    let insertIndex = 1; // Insert after 'Ana Sayfa'
+
+    if (user.role.toLowerCase() === 'admin') {
+      currentNavLinks.splice(insertIndex, 0, adminPanelLink);
+      insertIndex++; 
+      currentNavLinks.splice(insertIndex, 0, operatorPanelLink);
+    } else if (user.role.toLowerCase() === 'operator') {
+      currentNavLinks.splice(insertIndex, 0, operatorPanelLink);
+    }
+  }
+
+  // const navLinks = [ // Bu satır artık kullanılmıyor, yukarıda currentNavLinks oluşturuldu.
+
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -107,11 +140,11 @@ const Navbar = () => {
             </Link>
             <div className="hidden md:block ml-10">
               <div className="flex items-center space-x-1">
-                {navLinks.map((link) => (
+                {currentNavLinks.map((link) => (
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors ${link.className || ''} ${
                       location.pathname === link.path
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
@@ -282,7 +315,7 @@ const Navbar = () => {
           className="md:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-white shadow-lg overflow-y-auto"
         >
           <div className="px-2 pt-2 pb-4 space-y-1">
-            {navLinks.map((link) => (
+            {currentNavLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
