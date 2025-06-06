@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { protect, checkRole } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
+const checkRole = require("../middleware/roleMiddleware");
 const field = require("../models/field");
 
 const {
