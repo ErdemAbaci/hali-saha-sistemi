@@ -26,22 +26,14 @@ const Footer = () => {
         { name: 'Sık Sorulan Sorular', to: '/sss' },
       ],
     },
-    {
-      title: 'Şirket',
-      links: [
-        { name: 'Hakkımızda', to: '/hakkimizda' },
-        { name: 'Kariyer', to: '/kariyer' },
-        { name: 'Blog', to: '/blog' },
-        { name: 'Basın', to: '/basin' },
-      ],
-    },
+    
     {
       title: 'Yardım',
       links: [
-        { name: 'Yardım Merkezi', to: '/yardim' },
+        { name: 'Yardım Merkezi', to: '/yardim-merkezi' },
         { name: 'İletişim', to: '/iletisim' },
-        { name: 'Gizlilik Politikası', to: '/gizlilik' },
-        { name: 'Kullanım Koşulları', to: '/kullanim-kosullari' },
+        { name: 'Gizlilik Politikası', to: '/gizlilik-politikasi' },
+        { name: 'Kullanım Koşulları', to: '/sozlesmeler-ve-kurallar' },
       ],
     },
   ];
@@ -49,19 +41,19 @@ const Footer = () => {
   const contactInfo = [
     { 
       icon: <MapPin className="h-5 w-5 text-primary-600" />, 
-      text: '1234 Halı Saha Caddesi, İstanbul, Türkiye' 
+      text: 'Ahmet Kabaklı KYK Yurdu, Elazığ, Türkiye' 
     },
     { 
       icon: <Phone className="h-5 w-5 text-primary-600" />, 
-      text: '+90 555 123 45 67' 
+      text: '+90 546 023 2727' 
     },
     { 
       icon: <Mail className="h-5 w-5 text-primary-600" />, 
-      text: 'info@halisahabul.com' 
+      text: 'seyhanfalcon46@gmail.com' 
     },
     { 
       icon: <Clock className="h-5 w-5 text-primary-600" />, 
-      text: 'Hafta İçi: 09:00 - 22:00 | Hafta Sonu: 08:00 - 23:00' 
+      text: 'Hafta İçi: 09:00 - 23:00 | Hafta Sonu: 08:00 - 23:00' 
     },
   ];
 
@@ -69,17 +61,17 @@ const Footer = () => {
     { 
       name: 'Facebook', 
       icon: <Facebook className="h-5 w-5" />, 
-      url: 'https://facebook.com/halisahabul' 
+      url: 'https://facebook.com/elprus' 
     },
     { 
       name: 'Twitter', 
       icon: <Twitter className="h-5 w-5" />, 
-      url: 'https://twitter.com/halisahabul' 
+      url: 'https://twitter.com/huseyinuzum91' 
     },
     { 
       name: 'Instagram', 
       icon: <Instagram className="h-5 w-5" />, 
-      url: 'https://instagram.com/halisahabul' 
+      url: 'https://instagram.com/syhn_shn' 
     },
   ];
 
@@ -172,10 +164,10 @@ const Footer = () => {
               &copy; {currentYear} FormaGolü. Tüm hakları saklıdır.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
-              <Link to="/gizlilik" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
+              <Link to="/gizlilik-politikasi" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
                 Gizlilik Politikası
               </Link>
-              <Link to="/kullanim-kosullari" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
+              <Link to="/sozlesmeler-ve-kurallar" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">
                 Kullanım Koşulları
               </Link>
               <Link to="/cerez-politikasi" className="text-sm text-gray-500 hover:text-primary-600 transition-colors">

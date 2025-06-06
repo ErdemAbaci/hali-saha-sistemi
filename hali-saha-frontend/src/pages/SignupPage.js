@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { User, Mail, Phone, Lock, ArrowRight, Shield, Loader2 } from 'lucide-react';
 import Navbar from '../Components/layout/Navbar';
-import Footer from '../Components/layout/Footer';
 
 function SignupPage() {
   const [formData, setFormData] = useState({
@@ -65,7 +64,7 @@ function SignupPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post('http://localhost:5000/api/auth/register', {
         name: username.trim(),
         email: email.trim(),
         phone: phone.trim(),
@@ -285,8 +284,6 @@ function SignupPage() {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 }
