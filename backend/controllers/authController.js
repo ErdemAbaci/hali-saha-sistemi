@@ -4,7 +4,7 @@ const User = require("../models/user");
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
     //is email exist?
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -15,6 +15,7 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      phone,
       role: "customer",
     });
     await newUser.save();
@@ -75,5 +76,43 @@ exports.login = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Giriş sırasında hata oluştu" });
+  }
+};
+
+exports.createAdmin = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    
+    // Email kontrolü
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Bu email zaten kayıtlı" });
+    }
+
+    // Şifreyi hashle
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Yeni admin kullanıcısı oluştur
+    const newAdmin = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: "admin"
+    });
+
+    await newAdmin.save();
+
+    res.status(201).json({
+      message: "Admin başarıyla oluşturuldu",
+      user: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        role: newAdmin.role
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Admin oluşturma sırasında hata oluştu" });
   }
 };

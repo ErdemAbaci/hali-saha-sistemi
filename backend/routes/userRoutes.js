@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../middleware/authMiddleware");
+const { protect, authorize } = require("../middleware/authMiddleware");
 const checkRole = require("../middleware/roleMiddleware");
 const User = require("../models/user");
 
 // Kullanıcı profil bilgilerini getir
-router.get("/profile", authMiddleware, async (req, res) => {
+router.get("/profile", protect, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
@@ -15,7 +15,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
 });
 
 // Kullanıcı bilgilerini güncelle
-router.put("/update", authMiddleware, async (req, res) => {
+router.put("/update", protect, async (req, res) => {
   try {
     const { name, email } = req.body;
     const user = await User.findByIdAndUpdate(
@@ -35,7 +35,7 @@ router.put("/update", authMiddleware, async (req, res) => {
 });
 
 // Admin paneli için kullanıcı listesi
-router.get("/admin/users", authMiddleware, checkRole(["admin"]), async (req, res) => {
+router.get("/admin/users", protect, checkRole(["admin"]), async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
@@ -45,7 +45,7 @@ router.get("/admin/users", authMiddleware, checkRole(["admin"]), async (req, res
 });
 
 // Operatör paneli için kullanıcı listesi
-router.get("/operator/users", authMiddleware, checkRole(["operator", "admin"]), async (req, res) => {
+router.get("/operator/users", protect, checkRole(["operator", "admin"]), async (req, res) => {
   try {
     const users = await User.find({ role: "customer" }).select("-password");
     res.json(users);
@@ -55,7 +55,7 @@ router.get("/operator/users", authMiddleware, checkRole(["operator", "admin"]), 
 });
 
 // Kullanıcı rolünü güncelle (sadece admin)
-router.put("/admin/users/:id/role", authMiddleware, checkRole(["admin"]), async (req, res) => {
+router.put("/admin/users/:id/role", protect, checkRole(["admin"]), async (req, res) => {
   try {
     const { role } = req.body;
     const user = await User.findByIdAndUpdate(
