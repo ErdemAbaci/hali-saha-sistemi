@@ -79,7 +79,7 @@ const HaliSahaCard = ({ id, name, location, rating, reviewCount, price, image, f
       {cardContent}
     </div>
   ) : (
-    <Link to={`/saha/${id}`} className="block h-full">
+    <Link to={`/halisaha/${id}`} className="block h-full">
       {cardContent}
     </Link>
   );

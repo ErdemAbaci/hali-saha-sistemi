@@ -133,4 +133,48 @@ const getAvailableSlots = async (req, res) => {
   }
 };
 
-module.exports = { getAllFields, createField, updateField, deleteField, getFieldById, getAvailableSlots};
+const createFieldReview = async (req, res) => {
+  const { rating, comment } = req.body;
+  const { id: fieldId } = req.params;
+
+  if (!rating || !comment) {
+    return res.status(400).json({ message: 'Puan ve yorum alanları zorunludur.' });
+  }
+
+  try {
+    const fieldToReview = await field.findById(fieldId);
+
+    if (fieldToReview) {
+      const alreadyReviewed = fieldToReview.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+      );
+
+      if (alreadyReviewed) {
+        return res.status(400).json({ message: 'Bu sahayı zaten değerlendirdiniz.' });
+      }
+
+      const review = {
+        user: req.user._id,
+        name: req.user.name, // Assuming req.user has a 'name' field
+        rating: Number(rating),
+        comment,
+      };
+
+      fieldToReview.reviews.push(review);
+      fieldToReview.numReviews = fieldToReview.reviews.length;
+      fieldToReview.rating =
+        fieldToReview.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        fieldToReview.reviews.length;
+
+      await fieldToReview.save();
+      res.status(201).json({ message: 'Değerlendirmeniz başarıyla eklendi.', review });
+    } else {
+      res.status(404).json({ message: 'Halı saha bulunamadı.' });
+    }
+  } catch (error) {
+    console.error('Error creating review:', error);
+    res.status(500).json({ message: 'Değerlendirme eklenirken bir sunucu hatası oluştu.', error: error.message });
+  }
+};
+
+module.exports = { getAllFields, createField, updateField, deleteField, getFieldById, getAvailableSlots, createFieldReview };

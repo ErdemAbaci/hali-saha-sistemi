@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { protect, checkRole } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
+const authorize = require("../middleware/roleMiddleware"); // For role-based authorization (imports checkRole as authorize)
 const field = require("../models/field");
 
 const {
@@ -10,6 +11,7 @@ const {
   getAvailableSlots,
   updateField,
   deleteField,
+  createFieldReview, // Yorum ekleme fonksiyonu eklendi
 } = require("../controllers/fieldController");
 
 // Tüm halısahaları listele
@@ -41,5 +43,8 @@ router.put("/:id", protect, authorize("operator", "admin"), updateField);
 
 // Halısaha sil
 router.delete("/:id", protect, authorize("operator", "admin"), deleteField);
+
+// Halısahaya yorum ve puan ekle
+router.route("/:id/reviews").post(protect, createFieldReview);
 
 module.exports = router;

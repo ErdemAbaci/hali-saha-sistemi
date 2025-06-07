@@ -75,8 +75,8 @@ function ContactPage() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-900">Adres</h3>
-                    <p className="mt-1 text-gray-600">Halı Saha Caddesi No:123</p>
-                    <p className="text-gray-600">Kadıköy, İstanbul / Türkiye</p>
+                    <p className="mt-1 text-gray-600">Ahmet Kabaklı KYK Erkek Öğrenci Yurdu</p>
+                    <p className="text-gray-600">Merkez, Elazığ / Türkiye</p>
                   </div>
                 </div>
 
@@ -86,8 +86,8 @@ function ContactPage() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-900">Telefon</h3>
-                    <p className="mt-1 text-gray-600">+90 850 123 45 67</p>
-                    <p className="text-gray-600">+90 555 123 45 67 (WhatsApp)</p>
+                    <p className="mt-1 text-gray-600">+90 850 123 23 23</p>
+                    <p className="text-gray-600">+90 546 023 27 27 (WhatsApp)</p>
                   </div>
                 </div>
 
@@ -97,8 +97,8 @@ function ContactPage() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-900">E-posta</h3>
-                    <p className="mt-1 text-gray-600">info@halisaha.com</p>
-                    <p className="text-gray-600">destek@halisaha.com</p>
+                    <p className="mt-1 text-gray-600">seyhanfalcon@gmail.com</p>
+                    <p className="text-gray-600">erdemwhite@gmail.com</p>
                   </div>
                 </div>
 
@@ -119,9 +119,9 @@ function ContactPage() {
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Bizi Takip Edin</h3>
                 <div className="flex space-x-4">
                   {[
-                    { name: 'Facebook', icon: 'FaFacebook', url: '#' },
-                    { name: 'Twitter', icon: 'FaTwitter', url: '#' },
-                    { name: 'Instagram', icon: 'FaInstagram', url: '#' },
+                    { name: 'Facebook', icon: 'FaFacebook', url: 'https://facebook.com/elprus' },
+                    { name: 'Twitter', icon: 'FaTwitter', url: 'https://twitter.com/huseyinuzum91' },
+                    { name: 'Instagram', icon: 'FaInstagram', url: 'https://instagram.com/syhn_shn' },
                     { name: 'YouTube', icon: 'FaYoutube', url: '#' },
                   ].map((social) => (
                     <a
@@ -142,18 +142,6 @@ function ContactPage() {
               </div>
             </div>
 
-            {/* Map */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden h-96">
-              <iframe
-                title="Halı Saha Konumumuz"
-                className="w-full h-full"
-                frameBorder="0"
-                style={{ border: 0 }}
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.279856019132!2d29.00832031541191!3d41.00813777929972!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caba6c5d5ec7f9%3A0x3f4a3bbd7d1e1b3d!2sKad%C4%B1k%C3%B6y%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1620000000000!5m2!1str!2str"
-                allowFullScreen=""
-                loading="lazy"
-              />
-            </div>
           </div>
 
           {/* Contact Form */}

@@ -16,6 +16,7 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import TermsPage from './pages/TermsPage';
 import GizlilikPage from './pages/GizlilikPage';
 import SSSPage from './pages/SSSPage';
+import CerezPolitikasiPage from './pages/CerezPolitikasiPage'; // Yeni eklendi
 import AccountPage from './pages/AccountPage';
 import AdminPage from './pages/AdminPage'; // Eklendi
 import OperatorPage from './pages/OperatorPage'; // Eklendi
@@ -68,6 +69,7 @@ const AnimatedRoutesWrapper = () => {
         <Route path="/sozlesmeler-ve-kurallar" element={<AnimatedPage><TermsPage /></AnimatedPage>} />
         <Route path="/gizlilik-politikasi" element={<AnimatedPage><GizlilikPage /></AnimatedPage>} />
         <Route path="/sss" element={<AnimatedPage><SSSPage /></AnimatedPage>} />
+        <Route path="/cerez-politikasi" element={<AnimatedPage><CerezPolitikasiPage /></AnimatedPage>} /> {/* Yeni eklendi */}
         
         {/* Protected Routes */}
         <Route path="/hesabim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import HalisahaCards from '../Components/HaliSahaCards';
+import HaliSahaCard from '../Components/HaliSahaCard'; // Düzeltildi: HalisahaCards -> HaliSahaCard
 import './HomePage.css';
 
 function SahalarPage() {
@@ -38,7 +38,19 @@ function SahalarPage() {
       <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Halısahalar</h1>
       <div className="halisaha-grid">
         {halisahalar.map((halisaha) => (
-          <HalisahaCards key={halisaha._id} halisaha={halisaha} />
+          <HaliSahaCard 
+            key={halisaha._id} 
+            id={halisaha._id} 
+            name={halisaha.name} 
+            location={halisaha.location} 
+            rating={halisaha.rating} 
+            reviewCount={halisaha.numReviews} // Modeldeki numReviews'ı reviewCount prop'una eşle
+            price={halisaha.price} 
+            image={halisaha.imageUrl || 'default-placeholder.jpg'} // imageUrl yoksa varsayılan bir resim göster
+            // fields={halisaha.fields} // Bu prop HaliSahaCard'da tanımlı, gerekirse açılabilir
+            // isAvailable={halisaha.isAvailable} // Bu prop HaliSahaCard'da tanımlı, backend'den geliyorsa açılabilir
+            // bookingUrl={halisaha.bookingUrl} // Bu prop HaliSahaCard'da tanımlı, backend'den geliyorsa açılabilir
+          />
         ))}
       </div>
     </div>

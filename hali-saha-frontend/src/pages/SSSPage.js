@@ -206,7 +206,7 @@ function SSSPage() {
                 className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
                 <FaPhone className="-ml-1 mr-2 h-5 w-5" />
-                0850 123 45 67
+                0850 123 23 23
               </a>
               <a
                 href="mailto:destek@halisaha.com"

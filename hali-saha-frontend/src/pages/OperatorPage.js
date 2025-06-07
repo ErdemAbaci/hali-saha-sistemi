@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import FieldForm from '../Components/operator/FieldForm'; // FieldForm import edildi
+import FieldForm from '../Components/operator/FieldForm'; // FieldForm import edildi, path düzeltildi MEMORY[e7108e4d-c67d-403e-b454-c4e66eec6b5c]
 import { toast } from 'react-toastify'; // Bildirimler için
 
 const OperatorPage = () => {
@@ -100,6 +100,35 @@ const OperatorPage = () => {
     setFormLoading(false);
   };
 
+  const handleEditFieldSubmit = async (formData) => {
+    if (!token || !selectedField?._id) {
+      toast.error('Gerekli bilgiler eksik (token veya saha ID).');
+      setFormLoading(false); // Ensure loading is stopped
+      return;
+    }
+    setFormLoading(true);
+    setError('');
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      };
+      const { data } = await axios.put(`/api/fields/${selectedField._id}`, formData, config);
+      setFields(prevFields => prevFields.map(f => f._id === selectedField._id ? data : f));
+      setShowEditFieldModal(false);
+      setSelectedField(null); // Clear selected field after successful edit
+      toast.success('Saha başarıyla güncellendi!');
+    } catch (err) {
+      const message = err.response?.data?.message || 'Saha güncellenirken bir hata oluştu.';
+      setError(message);
+      toast.error(message);
+      console.error("Edit Field Error:", err.response?.data || err.message);
+    }
+    setFormLoading(false);
+  };
+
   if (loading) return <div className="flex justify-center items-center h-screen"><p className="text-xl">Yükleniyor...</p></div>;
 
   return (
@@ -168,16 +197,16 @@ const OperatorPage = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md mx-auto">
             <h2 className="text-2xl font-semibold mb-6">Sahayı Düzenle: {selectedField.name}</h2>
-            {/* Form buraya gelecek (selectedField ile doldurulmuş) */}
-            <p className="mb-4">Saha düzenleme formu burada yer alacak.</p>
-            <div className="flex justify-end space-x-3">
-              <button onClick={() => setShowEditFieldModal(false)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg">
-                İptal
-              </button>
-              <button /* onClick={handleEditFieldSubmit} */ className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg">
-                Güncelle
-              </button>
-            </div>
+            <FieldForm
+              onSubmit={handleEditFieldSubmit}
+              onCancel={() => {
+                setShowEditFieldModal(false);
+                setSelectedField(null); // Clear selected field on cancel
+              }}
+              initialData={selectedField} // Pass current field data to prefill
+              isLoading={formLoading}
+              isEditMode={true} // Optional: FieldForm might use this to change button text or behavior
+            />
           </div>
         </div>
       )}

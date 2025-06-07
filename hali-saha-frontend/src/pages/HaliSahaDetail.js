@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Clock, Phone, Mail, Star, Calendar, ArrowLeft, Loader2, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { MapPin, Clock, Phone, Mail, Star, Calendar, ArrowLeft, Loader2, AlertCircle, CheckCircle, X, MessageSquare, UserCircle } from 'lucide-react'; // Added MessageSquare, UserCircle
+import ReviewForm from '../Components/reviews/ReviewForm'; // Added ReviewForm import
 
 // Import styles
 import 'react-datepicker/dist/react-datepicker.css'; // DatePicker CSS'ini import et
@@ -46,8 +47,37 @@ const fadeInUp = {
 };
 
 function HaliSahaDetail() {
+  // Helper function to check if a date is today
+  const isToday = (someDate) => {
+    const today = new Date();
+    return someDate.getDate() === today.getDate() &&
+           someDate.getMonth() === today.getMonth() &&
+           someDate.getFullYear() === today.getFullYear();
+  };
+
+  // Helper function to check if a time slot is in the past for today
+  const isTimeSlotPast = (timeSlotString, date) => {
+    if (!isToday(date)) {
+      return false; // Not today, so not past in this context
+    }
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    const [slotHour, slotMinute] = timeSlotString.split(':').map(Number);
+
+    if (slotHour < currentHour) {
+      return true;
+    }
+    if (slotHour === currentHour && slotMinute <= currentMinute) {
+      return true;
+    }
+    return false;
+  };
+
   const { id } = useParams(); // URL'den halısaha ID'sini al
   const navigate = useNavigate(); // navigate hook'u için
+  const location = useLocation(); // location hook'u için
 
   // State management
   const [halisaha, setHaliSaha] = useState(null);
@@ -62,6 +92,8 @@ function HaliSahaDetail() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [reviewError, setReviewError] = useState(null);
 
   // Mock images for the gallery
   const [galleryImages] = useState([
@@ -92,6 +124,42 @@ function HaliSahaDetail() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  const handleReviewSubmit = async ({ rating, comment }) => {
+    if (!isLoggedIn) {
+      setReviewError('Yorum yapmak için giriş yapmalısınız.');
+      // navigate('/giris'); // Optionally redirect to login
+      return;
+    }
+    setIsSubmittingReview(true);
+    setReviewError(null);
+    try {
+      const token = localStorage.getItem('userToken');
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await axios.post(
+        `http://localhost:5000/api/fields/${id}/reviews`,
+        { rating, comment },
+        config
+      );
+      // setShowSuccess(true); // Or a more specific review success message
+      // setTimeout(() => setShowSuccess(false), 3000);
+      alert(data.message || 'Değerlendirmeniz başarıyla eklendi!'); // Simple alert for now
+      fetchHaliSahaDetails(); // Refresh data to show new review
+    } catch (err) {
+      const message = err.response?.data?.message || 'Değerlendirme gönderilirken bir hata oluştu.';
+      setReviewError(message);
+      // setShowError(true); // Or a more specific review error message
+      // setTimeout(() => setShowError(false), 3000);
+      console.error('Review submission error:', err.response?.data || err.message);
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
   // 1. Halısaha detaylarını çek
   useEffect(() => {
     const fetchHaliSahaDetails = async () => {
@@ -112,6 +180,28 @@ function HaliSahaDetail() {
 
     fetchHaliSahaDetails();
   }, [id]);
+
+  const fetchHaliSahaDetails = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/fields/${id}`);
+      setHaliSaha(response.data);
+      if (response.data && response.data.fields && response.data.fields.length > 0 && !selectedField) {
+        setSelectedField(response.data.fields[0].toString());
+      }
+      setError(null); // Clear previous errors
+    } catch (err) {
+      setError('Halısaha detayları yüklenirken bir hata oluştu.');
+      console.error('API Error fetching details:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, selectedField]);
+
+  // Initial fetch of HaliSaha details
+  useEffect(() => {
+    fetchHaliSahaDetails();
+  }, [fetchHaliSahaDetails]);
 
   // 2. Seçilen tarih ve sahaya göre uygun saat dilimlerini çek
   useEffect(() => {
@@ -310,7 +400,7 @@ function HaliSahaDetail() {
       <motion.button
         variants={fadeInUp}
         onClick={() => navigate(-1)}
-        className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
+        className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-sky-600 text-white rounded-full shadow-md hover:bg-white hover:text-sky-600 hover:border hover:border-sky-600 transition-colors"
       >
         <ArrowLeft className="w-5 h-5" />
         <span>Geri Dön</span>
@@ -357,7 +447,7 @@ function HaliSahaDetail() {
                     className={`w-5 h-5 ${i < Math.floor(halisaha.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
                   />
                 ))}
-                <span className="ml-2 text-sm text-white/90">({halisaha.reviewsCount} değerlendirme)</span>
+                <span className="ml-2 text-sm text-white/90">({halisaha.numReviews || 0} Değerlendirme)</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold">{halisaha.name}</h1>
               <div className="flex items-center text-white/90 mt-2">
@@ -518,10 +608,10 @@ function HaliSahaDetail() {
                             key={index}
                             type="button"
                             onClick={() => handleTimeSlotSelect(slot)}
-                            disabled={slot.booked}
+                            disabled={slot.booked || (isToday(selectedDate) && isTimeSlotPast(slot.time, selectedDate))}
                             className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                              slot.booked
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed line-through'
+                              (slot.booked || (isToday(selectedDate) && isTimeSlotPast(slot.time, selectedDate)))
+                                ? `bg-gray-100 text-gray-400 cursor-not-allowed ${slot.booked ? 'line-through' : ''}`
                                 : selectedTimeSlot === slot.time
                                 ? 'bg-green-600 text-white'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -675,6 +765,65 @@ function HaliSahaDetail() {
           </p>
         </motion.div>
       </motion.footer>
+
+      {/* Reviews Section */}
+      {halisaha && (
+        <motion.div 
+          variants={containerVariants} 
+          initial="hidden" 
+          animate="visible" 
+          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+        >
+          <motion.h2 variants={itemVariants} className="text-2xl font-bold text-gray-900 mb-6">Değerlendirmeler ({halisaha.numReviews || 0})</motion.h2>
+          
+          {/* Review Form */}
+          {isLoggedIn ? (
+            <motion.div variants={fadeInUp} className="mb-8 p-6 bg-white rounded-xl shadow-lg">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Yorum Yapın</h3>
+              <ReviewForm onSubmit={handleReviewSubmit} isLoading={isSubmittingReview} />
+              {reviewError && <p className="text-sm text-red-600 mt-2">{reviewError}</p>}
+            </motion.div>
+          ) : (
+            <motion.div variants={fadeInUp} className="mb-8 p-6 bg-gray-50 rounded-xl text-center">
+              <p className="text-gray-700">Yorum yapmak için <button onClick={() => navigate('/giris', { state: { from: location.pathname, message: 'Yorum yapmak için giriş yapmanız gerekmektedir.' } })} className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors font-medium shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 transform hover:scale-105">giriş yapmanız</button> gerekmektedir.</p>
+            </motion.div>
+          )}
+
+          {/* Existing Reviews */}
+          <motion.div variants={containerVariants} className="space-y-6">
+            {halisaha.reviews && halisaha.reviews.length > 0 ? (
+              halisaha.reviews.slice().reverse().map((review) => ( // .slice().reverse() to show newest first
+                <motion.div 
+                  key={review._id} 
+                  variants={fadeInUp} 
+                  className="bg-white p-5 rounded-lg shadow-md border border-gray-100"
+                >
+                  <div className="flex items-start mb-2">
+                    <UserCircle className="w-10 h-10 text-gray-400 mr-3 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-800">{review.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(review.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </p>
+                    </div>
+                    <div className="ml-auto flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-sm pl-13">{review.comment}</p>
+                </motion.div>
+              ))
+            ) : (
+              <motion.p variants={fadeInUp} className="text-gray-600 text-center py-4">Henüz değerlendirme yapılmamış. İlk yorumu siz yapın!</motion.p>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

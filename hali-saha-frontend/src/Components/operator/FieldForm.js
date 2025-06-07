@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const FieldForm = ({ onSubmit, initialData = null, onCancel, isLoading }) => {
+const FieldForm = ({ onSubmit, initialData = null, onCancel, isLoading, isEditMode = false }) => {
   const [formData, setFormData] = useState({
     name: '',
     location: '',
