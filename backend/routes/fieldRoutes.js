@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { protect } = require("../middleware/authMiddleware");
-const checkRole = require("../middleware/roleMiddleware");
+const { protect, checkRole } = require("../middleware/authMiddleware");
 const field = require("../models/field");
 
 const {
@@ -17,7 +16,7 @@ const {
 router.get("/", getAllFields);
 
 // İşletmeciye ait halı sahaları getir
-router.get("/operator/fields", protect, checkRole(["operator", "admin"]), async (req, res) => {
+router.get("/operator/fields", protect, authorize("operator", "admin"), async (req, res) => {
   try {
     // Admin tüm halı sahaları görebilir, operator sadece kendininkileri
     const query = req.user.role === "admin" ? {} : { operator: req.user._id };
@@ -29,7 +28,7 @@ router.get("/operator/fields", protect, checkRole(["operator", "admin"]), async 
 });
 
 // Halısaha ekle
-router.post("/", protect, checkRole(["operator", "admin"]), createField);
+router.post("/", protect, authorize("operator", "admin"), createField);
 
 // Halısaha detayı getir
 router.get("/:id", getFieldById);
@@ -38,9 +37,9 @@ router.get("/:id", getFieldById);
 router.get("/:id/available-slots", getAvailableSlots);
 
 // Halısaha güncelle
-router.put("/:id", protect, checkRole(["operator", "admin"]), updateField);
+router.put("/:id", protect, authorize("operator", "admin"), updateField);
 
 // Halısaha sil
-router.delete("/:id", protect, checkRole(["operator", "admin"]), deleteField);
+router.delete("/:id", protect, authorize("operator", "admin"), deleteField);
 
 module.exports = router;
