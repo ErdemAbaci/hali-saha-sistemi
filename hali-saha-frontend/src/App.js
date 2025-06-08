@@ -72,7 +72,11 @@ const AnimatedRoutesWrapper = () => {
         <Route path="/gizlilik-politikasi" element={<AnimatedPage><GizlilikPage /></AnimatedPage>} />
         <Route path="/sss" element={<AnimatedPage><SSSPage /></AnimatedPage>} />
         <Route path="/cerez-politikasi" element={<AnimatedPage><CerezPolitikasiPage /></AnimatedPage>} /> {/* Yeni eklendi */}
-        
+        <Route path="/odeme" element={
+          <PrivateRoute>
+            <PaymentPage />
+          </PrivateRoute>
+        } />
         {/* Protected Routes */}
         <Route path="/hesabim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />
         <Route path="/admin" element={<PrivateRoute allowedRoles={['admin']}><AnimatedPage><AdminPage /></AnimatedPage></PrivateRoute>} />
