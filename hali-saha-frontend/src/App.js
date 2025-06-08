@@ -24,6 +24,7 @@ import NotFoundPage from './pages/NotFoundPage'; // Eklendi (veya NotFound olara
 import LineupBuilderPage from './pages/LineupBuilderPage'; // Yeni eklendi
 import PrivateRoute from './Components/common/PrivateRoute'; // Eklendi
 import { AuthProvider } from './context/AuthContext'; // AuthProvider eklendi
+import PaymentPage from './pages/PaymentPage';
 
 // Styles
 import './index.css';
@@ -71,7 +72,6 @@ const AnimatedRoutesWrapper = () => {
         <Route path="/gizlilik-politikasi" element={<AnimatedPage><GizlilikPage /></AnimatedPage>} />
         <Route path="/sss" element={<AnimatedPage><SSSPage /></AnimatedPage>} />
         <Route path="/cerez-politikasi" element={<AnimatedPage><CerezPolitikasiPage /></AnimatedPage>} /> {/* Yeni eklendi */}
-        <Route path="/lineup-builder" element={<AnimatedPage><LineupBuilderPage /></AnimatedPage>} />
         
         {/* Protected Routes */}
         <Route path="/hesabim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />
@@ -97,10 +97,6 @@ const AnimatedPage = ({ children }) => (
     {children}
   </motion.div>
 );
-
-
-
-
 
 const App = () => {
   return (

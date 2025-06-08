@@ -280,34 +280,20 @@ function HaliSahaDetail() {
 
     // Proceed with booking if user is logged in
     if (selectedDate && selectedField && selectedTimeSlot) {
-      try {
-        // Your existing booking logic here
-        const response = await axios.post('http://localhost:5000/api/reservations', {
-          halisahaId: id,
-          fieldNumber: selectedField,
-          date: selectedDate,
-          timeSlot: selectedTimeSlot
-        });
-        
-        // Show success message
-        setShowSuccess(true);
-        
-        // Show booking details
-        alert(`Rezervasyon bilgileri:\nTarih: ${selectedDate.toLocaleDateString()}\nSaha: ${selectedField}\nSaat: ${selectedTimeSlot}`);
-        
-        // Reset selections after booking
-        setSelectedDate(null);
-        setSelectedField(null);
-        setSelectedTimeSlot(null);
-        
-        // Clear any pending booking
-        sessionStorage.removeItem('pendingBooking');
-        
-      } catch (error) {
-        console.error('Rezervasyon hatası:', error);
-        setError(error.response?.data?.message || 'Rezervasyon yapılırken bir hata oluştu');
-        setShowError(true);
-      }
+      // Ödeme sayfasına yönlendir
+      navigate('/odeme', {
+        state: {
+          reservationDetails: {
+            fieldId: id,
+            fieldNumber: selectedField,
+            date: selectedDate.toISOString().split('T')[0],
+            hour: selectedTimeSlot,
+            amount: halisaha.price,
+            fieldName: halisaha.name,
+            userId: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : null
+          }
+        }
+      });
     }
   };
 

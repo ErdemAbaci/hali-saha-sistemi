@@ -1,6 +1,10 @@
+// .env dosyasını yükle
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+
 // server.js
 const express = require("express");
-const dotenv = require("dotenv");
+const path = require("path");
+const cors = require("cors");
 const connectDB = require("./config/db");
 const verifyToken = require("./middleware/verifyToken");
 
@@ -9,10 +13,7 @@ const authRoutes = require("../backend/routes/authRoutes");
 const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");
 const reservationRoutes = require("../backend/routes/reservationRoutes");
-const path = require("path");
-const cors = require("cors");
-// .env dosyasını yükle
-dotenv.config();
+const paymentRoutes = require('../backend/routes/paymentRoutes');
 
 // MongoDB'ye bağlan
 connectDB();
@@ -50,6 +51,9 @@ app.use("/api/fields", fieldRoutes);
 
 //User Route
 app.use("/api/users", userRoutes);
+
+//Payment Route
+app.use('/api/payments', paymentRoutes);
 
 // Production'da aktif edilecek
 // app.use(express.static(path.join(__dirname, '../hali-saha-frontend/build')));
