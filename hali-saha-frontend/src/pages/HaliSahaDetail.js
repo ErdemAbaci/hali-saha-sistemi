@@ -738,12 +738,12 @@ function HaliSahaDetail() {
               >
                 <motion.div variants={itemVariants} className="flex justify-between">
                   <span className="text-gray-600">1 Saatlik Kiralama</span>
-                  <span className="font-medium">{halisaha.pricePerHour || 200} ₺</span>
+                  <span className="font-medium">{halisaha.pricePerHour || 1380} ₺</span>
                 </motion.div>
                 <motion.div variants={itemVariants} className="border-t border-gray-200 my-2"></motion.div>
                 <motion.div variants={itemVariants} className="flex justify-between font-medium">
                   <span>Toplam</span>
-                  <span>{halisaha.pricePerHour || 200} ₺</span>
+                  <span>{halisaha.pricePerHour || 1380} ₺</span>
                 </motion.div>
               </motion.div>
             </motion.div>

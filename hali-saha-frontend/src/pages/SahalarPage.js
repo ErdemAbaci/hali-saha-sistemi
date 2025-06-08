@@ -35,7 +35,7 @@ function SahalarPage() {
 
   return (
     <div style={{ padding: '40px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Halısahalar</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}></h1>
       <div className="halisaha-grid">
         {halisahalar.map((halisaha) => (
           <HaliSahaCard 
