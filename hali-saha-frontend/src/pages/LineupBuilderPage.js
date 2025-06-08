@@ -286,7 +286,7 @@ const LineupBuilderPage = () => {
   };
 
   const handleSaveAndShare = () => {
-    const lineupData = { lineupName, fieldType, formation, playerCount, mainJerseyColor, secondaryJerseyColor, jerseyTextColor, players };
+    const lineupData = { lineupName, fieldType, formation, playerCount, mainJerseyColor, secondaryJerseyColor, jerseyNumberColor, players };
     localStorage.setItem('lineupData', JSON.stringify(lineupData));
     alert('Lineup saved to local storage! Share functionality can be built upon this.');
     // To share, you might generate a URL with this data encoded, or save to a backend and provide a link.

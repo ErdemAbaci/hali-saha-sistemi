@@ -72,6 +72,7 @@ const AnimatedRoutesWrapper = () => {
         <Route path="/gizlilik-politikasi" element={<AnimatedPage><GizlilikPage /></AnimatedPage>} />
         <Route path="/sss" element={<AnimatedPage><SSSPage /></AnimatedPage>} />
         <Route path="/cerez-politikasi" element={<AnimatedPage><CerezPolitikasiPage /></AnimatedPage>} /> {/* Yeni eklendi */}
+        <Route path="/lineup-builder" element={<AnimatedPage><LineupBuilderPage /></AnimatedPage>} />
         <Route path="/odeme" element={
           <PrivateRoute>
             <PaymentPage />
