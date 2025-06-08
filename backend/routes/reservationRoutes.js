@@ -7,10 +7,11 @@ const {
   getUserReservations,
 } = require("../controllers/reservationController");
 
-const verifyToken = require("../middleware/verifyToken");
+const { protect } = require("../middleware/authMiddleware");
 
-router.post("/", verifyToken, createReservation);
-router.post("/available-hours", verifyToken, getAvailableHours);
-router.patch("/:id/cancel", verifyToken, cancelReservation);
-router.get("/my-reservations", verifyToken, getUserReservations);
+router.post("/", protect, createReservation);
+router.post("/available-hours", protect, getAvailableHours);
+router.patch("/:id/cancel", protect, cancelReservation);
+router.get("/my-reservations", protect, getUserReservations);
+
 module.exports = router;

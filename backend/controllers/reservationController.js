@@ -3,7 +3,25 @@ const Reservation = require("../models/reservation");
 // Rezervasyon oluşturma
 async function createReservation(req, res) {
   try {
-    const { user, field, fieldNumber, date, hour } = req.body;
+    const { field, fieldNumber, date, hour, paymentId } = req.body;
+
+    // req.user'dan kullanıcı ID'sini al
+    if (!req.user || !req.user._id) {
+      console.error('Kullanıcı bilgisi bulunamadı:', req.user);
+      return res.status(401).json({ message: 'Kullanıcı bilgisi bulunamadı' });
+    }
+
+    const userId = req.user._id;
+
+    console.log('Rezervasyon bilgileri:', {
+      userId,
+      field,
+      fieldNumber,
+      date,
+      hour,
+      paymentId,
+      user: req.user
+    });
 
     const controls = await Reservation.findOne({
       field,
@@ -20,21 +38,26 @@ async function createReservation(req, res) {
     }
 
     const newReservation = new Reservation({
-      user,
+      user: userId,
       field,
       fieldNumber,
       date,
       hour,
-      status: "pending",
+      status: "confirmed",
     });
-    await newReservation.save();
+
+    console.log('Yeni rezervasyon:', newReservation);
+
+    const savedReservation = await newReservation.save();
+    console.log('Kaydedilen rezervasyon:', savedReservation);
 
     res.status(201).json({
+      success: true,
       message: "Rezervasyon oluşturuldu",
-      reservation: newReservation,
+      reservation: savedReservation,
     });
   } catch (error) {
-    console.error(error);
+    console.error('Rezervasyon oluşturma hatası:', error);
     res
       .status(500)
       .json({ message: "Sunucu hatası, lütfen daha sonra tekrar deneyin." });
