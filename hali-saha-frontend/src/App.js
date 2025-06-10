@@ -25,6 +25,7 @@ import LineupBuilderPage from './pages/LineupBuilderPage'; // Yeni eklendi
 import PrivateRoute from './Components/common/PrivateRoute'; // Eklendi
 import { AuthProvider } from './context/AuthContext'; // AuthProvider eklendi
 import PaymentPage from './pages/PaymentPage';
+import RezervasyonlarimPage from './pages/RezervasyonlarimPage';
 
 // Styles
 import './index.css';
@@ -80,6 +81,7 @@ const AnimatedRoutesWrapper = () => {
         } />
         {/* Protected Routes */}
         <Route path="/profil" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />
+        <Route path="/rezervasyonlarim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><RezervasyonlarimPage /></AnimatedPage></PrivateRoute>} />
         <Route path="/hesabim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />
         <Route path="/admin" element={<PrivateRoute allowedRoles={['admin']}><AnimatedPage><AdminPage /></AnimatedPage></PrivateRoute>} />
         <Route path="/operator" element={<PrivateRoute allowedRoles={['admin', 'operator']}><AnimatedPage><OperatorPage /></AnimatedPage></PrivateRoute>} />
