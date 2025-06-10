@@ -120,7 +120,7 @@ const PaymentForm = ({ amount, onSuccess, reservationDetails }) => {
       }
 
       // Başarılı ödeme sonrası yönlendirme
-      navigate('/hesabim', {
+      navigate('/rezervasyonlarim', {
         state: { 
           message: 'Rezervasyonunuz ve ödemeniz başarıyla tamamlandı!',
           success: true
