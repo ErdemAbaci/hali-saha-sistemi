@@ -267,13 +267,13 @@ function HaliSahaDetail() {
         from: window.location.pathname
       };
       sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
-      
+
       // Redirect to login
-      navigate('/giris', { 
-        state: { 
+      navigate('/giris', {
+        state: {
           from: window.location.pathname,
-          message: 'Rezervasyonunuzu tamamlamak için giriş yapın' 
-        } 
+          message: 'Rezervasyonunuzu tamamlamak için giriş yapın'
+        }
       });
       return;
     }
@@ -291,6 +291,43 @@ function HaliSahaDetail() {
             amount: halisaha.price,
             fieldName: halisaha.name,
             userId: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : null
+          }
+        }
+      });
+    }
+  };
+
+  const handleUseSubscriptionRightClick = () => {
+    if (!isLoggedIn) {
+      const bookingDetails = {
+        halisahaId: id,
+        date: selectedDate,
+        field: selectedField,
+        timeSlot: selectedTimeSlot,
+        from: window.location.pathname,
+        useSubscription: true // Abonelik hakkı kullanılacağını belirt
+      };
+      sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
+
+      navigate('/giris', {
+        state: {
+          from: window.location.pathname,
+          message: 'Abonelik hakkınızı kullanmak için giriş yapın'
+        }
+      });
+      return;
+    }
+
+    if (selectedDate && selectedField && selectedTimeSlot) {
+      navigate('/abonelik-hakki-kullan', {
+        state: {
+          reservationDetails: {
+            fieldId: id,
+            fieldNumber: selectedField,
+            date: selectedDate.toISOString().split('T')[0],
+            hour: selectedTimeSlot,
+            fieldName: halisaha.name,
+            halisahaId: id, // HaliSahaDetail sayfasındaki id
           }
         }
       });
@@ -615,25 +652,58 @@ function HaliSahaDetail() {
                   </div>
                 )}
 
-                {/* Book Button */}
-                <button
-                  type="button"
-                  onClick={handleBookClick}
-                  disabled={!selectedDate || !selectedField || !selectedTimeSlot}
-                  className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
-                    selectedDate && selectedField && selectedTimeSlot
-                      ? isLoggedIn 
-                        ? 'bg-green-600 hover:bg-green-700'
-                        : 'bg-blue-600 hover:bg-blue-700'
-                      : 'bg-gray-300 cursor-not-allowed'
-                  }`}
+                {/* Seçili Saat Dilimi ve Rezervasyon Butonu */}
+                <motion.div
+                  variants={itemVariants}
+                  className="mt-8 p-6 bg-blue-50 rounded-lg shadow-inner text-center"
                 >
-                  {!selectedDate || !selectedField || !selectedTimeSlot 
-                    ? 'Tarih, Saha ve Saat Seçin'
-                    : isLoggedIn 
-                      ? 'Rezervasyon Yap' 
-                      : 'Giriş Yap & Rezervasyon Yap'}
-                </button>
+                  {selectedTimeSlot ? (
+                    <p className="text-lg font-semibold text-blue-700 mb-4">
+                      Seçili Saat: <span className="text-blue-900">{selectedTimeSlot}</span>
+                    </p>
+                  ) : (
+                    <p className="text-lg text-gray-600 mb-4">Lütfen bir saat dilimi seçin.</p>
+                  )}
+
+                  {isLoggedIn ? (
+                    <div className="flex space-x-4">
+                      <button
+                        onClick={handleBookClick}
+                        disabled={!selectedTimeSlot}
+                        className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+                          !selectedTimeSlot
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-green-600 hover:bg-green-700'
+                        }`}
+                      >
+                        Rezervasyon Yap
+                      </button>
+                      <button
+                        onClick={handleUseSubscriptionRightClick}
+                        disabled={!selectedTimeSlot}
+                        className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+                          !selectedTimeSlot
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-sky-600 hover:bg-sky-700'
+                        }`}
+                      >
+                        Abonelik Hakkını Kullan
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleBookClick}
+                      disabled={!selectedTimeSlot}
+                      className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+                        !selectedTimeSlot
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
+                    >
+                      Giriş Yap ve Rezervasyon Yap
+                    </button>
+                  )}
+                </motion.div>
 
                 {/* Success/Error Messages */}
                 <AnimatePresence>

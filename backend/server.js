@@ -14,6 +14,7 @@ const userRoutes = require("../backend/routes/userRoutes");
 const fieldRoutes = require("../backend/routes/fieldRoutes");
 const reservationRoutes = require("../backend/routes/reservationRoutes");
 const paymentRoutes = require('../backend/routes/paymentRoutes');
+const subscriptionRoutes = require('../backend/routes/subscriptionRoutes');
 
 // MongoDB'ye bağlan
 connectDB();
@@ -54,6 +55,9 @@ app.use("/api/users", userRoutes);
 
 //Payment Route
 app.use('/api/payments', paymentRoutes);
+
+//Subscription Route
+app.use('/api/subscriptions', subscriptionRoutes);
 
 // Production'da aktif edilecek
 // app.use(express.static(path.join(__dirname, '../hali-saha-frontend/build')));
