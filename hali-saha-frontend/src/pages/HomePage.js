@@ -6,6 +6,7 @@ import axios from 'axios';
 
 // Components
 import HaliSahaCard from '../Components/HaliSahaCard';
+import Map from '../Components/Map';
 
 // Assets
 const heroImage = 'https://images.unsplash.com/photo-1543351611-58f69d7c1781?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80';
@@ -270,6 +271,14 @@ const HomePage = () => {
           </Link>
         </div>
       </section>
+
+      {/* Google Maps Bileşeni */}
+      <div className="bg-white py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Elazığ'daki Popüler Halı Sahalar</h2>
+          <Map />
+        </div>
+      </div>
     </div>
   );
 }
