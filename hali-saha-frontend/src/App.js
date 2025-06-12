@@ -29,6 +29,7 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import SubPaymentPage from './pages/SubPaymentPage';
 import MySubscriptionsPage from './pages/MySubscriptionsPage';
 import UseSubscriptionRightPage from './pages/UseSubscriptionRightPage';
+import RezervasyonlarimPage from './pages/RezervasyonlarimPage';
 
 // Styles
 import './index.css';
