@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone, Shield, Briefcase } from 'lucide-react';
+import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone, Shield, Briefcase, Crown } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,6 +89,7 @@ const Navbar = () => {
   const baseNavLinks = [
     { name: 'Ana Sayfa', path: '/', icon: <Home className="w-5 h-5" /> },
     { name: 'Sahalar', path: '/sahalar', icon: <Calendar className="w-5 h-5" /> },
+    { name: 'Abonelik', path: '/abonelik', icon: <Crown className="w-5 h-5" /> },
     { name: 'Nasıl Çalışır?', path: '/nasil-calisir', icon: <Info className="w-5 h-5" /> },
     { name: 'Yardım', path: '/yardim-merkezi', icon: <HelpCircle className="w-5 h-5" /> },
     { name: 'İletişim', path: '/iletisim', icon: <Phone className="w-5 h-5" /> },

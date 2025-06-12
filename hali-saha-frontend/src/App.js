@@ -16,16 +16,19 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import TermsPage from './pages/TermsPage';
 import GizlilikPage from './pages/GizlilikPage';
 import SSSPage from './pages/SSSPage';
-import CerezPolitikasiPage from './pages/CerezPolitikasiPage'; // Yeni eklendi
+import CerezPolitikasiPage from './pages/CerezPolitikasiPage';
 import AccountPage from './pages/AccountPage';
-import AdminPage from './pages/AdminPage'; // Eklendi
-import OperatorPage from './pages/OperatorPage'; // Eklendi
-import NotFoundPage from './pages/NotFoundPage'; // Eklendi (veya NotFound olarak güncellendi)
-import LineupBuilderPage from './pages/LineupBuilderPage'; // Yeni eklendi
-import PrivateRoute from './Components/common/PrivateRoute'; // Eklendi
-import { AuthProvider } from './context/AuthContext'; // AuthProvider eklendi
+import AdminPage from './pages/AdminPage';
+import OperatorPage from './pages/OperatorPage';
+import NotFoundPage from './pages/NotFoundPage';
+import LineupBuilderPage from './pages/LineupBuilderPage';
+import PrivateRoute from './Components/common/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
 import PaymentPage from './pages/PaymentPage';
-import RezervasyonlarimPage from './pages/RezervasyonlarimPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import SubPaymentPage from './pages/SubPaymentPage';
+import MySubscriptionsPage from './pages/MySubscriptionsPage';
+import UseSubscriptionRightPage from './pages/UseSubscriptionRightPage';
 
 // Styles
 import './index.css';
@@ -72,13 +75,17 @@ const AnimatedRoutesWrapper = () => {
         <Route path="/sozlesmeler-ve-kurallar" element={<AnimatedPage><TermsPage /></AnimatedPage>} />
         <Route path="/gizlilik-politikasi" element={<AnimatedPage><GizlilikPage /></AnimatedPage>} />
         <Route path="/sss" element={<AnimatedPage><SSSPage /></AnimatedPage>} />
-        <Route path="/cerez-politikasi" element={<AnimatedPage><CerezPolitikasiPage /></AnimatedPage>} /> {/* Yeni eklendi */}
+        <Route path="/cerez-politikasi" element={<AnimatedPage><CerezPolitikasiPage /></AnimatedPage>} />
         <Route path="/lineup-builder" element={<AnimatedPage><LineupBuilderPage /></AnimatedPage>} />
+        <Route path="/abonelik" element={<AnimatedPage><SubscriptionPage /></AnimatedPage>} />
         <Route path="/odeme" element={
           <PrivateRoute>
             <PaymentPage />
           </PrivateRoute>
-        } />
+        } />
+        <Route path="/abonelik-odeme" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><SubPaymentPage /></AnimatedPage></PrivateRoute>} />
+        <Route path="/aboneliklerim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><MySubscriptionsPage /></AnimatedPage></PrivateRoute>} />
+        <Route path="/abonelik-hakki-kullan" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><UseSubscriptionRightPage /></AnimatedPage></PrivateRoute>} />
         {/* Protected Routes */}
         <Route path="/profil" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><AccountPage /></AnimatedPage></PrivateRoute>} />
         <Route path="/rezervasyonlarim" element={<PrivateRoute allowedRoles={['customer', 'operator', 'admin']}><AnimatedPage><RezervasyonlarimPage /></AnimatedPage></PrivateRoute>} />
@@ -109,15 +116,15 @@ const AnimatedPage = ({ children }) => (
 const App = () => {
   return (
     <Router>
-      <AuthProvider> {/* AuthProvider ile tüm uygulamayı sarıyoruz */}
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow pt-16"> 
-          <AnimatedRoutesWrapper />
-        </main>
-        <Footer />
-      </div>
-          </AuthProvider> {/* AuthProvider kapatma */} 
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow pt-16"> 
+            <AnimatedRoutesWrapper />
+          </main>
+          <Footer />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }
