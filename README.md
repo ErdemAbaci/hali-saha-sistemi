@@ -72,7 +72,7 @@ o npm start
 o Uygulama varsayılan olarak http://localhost:3000 adresinde açılacaktır.
 
 📫 İletişim
-Erdem Abacı - ErdemAbaci
-Huseyin Üzüm - huseyinuzum
+Erdem Abacı - https://github.com/ErdemAbaci
+Huseyin Üzüm - [huseyinuzum](https://github.com/huseyinuzum)
 Proje Linki: https://github.com/ErdemAbaci/hali-saha-sistemi
 
