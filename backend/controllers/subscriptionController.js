@@ -2,6 +2,7 @@ const Subscription = require('../models/Subscription');
 const SubscriptionPackage = require('../models/SubscriptionPackage');
 const Reservation = require('../models/reservation');
 const Field = require('../models/field');
+const mongoose = require('mongoose');
 
 // Tüm abonelik paketlerini getir
 exports.getSubscriptionPackages = async (req, res) => {
@@ -140,7 +141,6 @@ exports.cancelSubscription = async (req, res) => {
 };
 
 // Abonelik hakkını kullanarak rezervasyon oluştur
-// Abonelik hakkını kullanarak rezervasyon oluştur
 exports.useSubscriptionRight = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -164,49 +164,75 @@ exports.useSubscriptionRight = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Halı saha bulunamadı.' });
         }
 
-        // --- DEĞİŞİKLİK BURADA ---
-        // Gelen tarihi YYYY-MM-DD formatına çeviriyoruz.
+        // Tarihi formatla
         const d = new Date(date);
         const formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        // --- DEĞİŞİKLİK SONU ---
 
-        const existingReservation = await Reservation.findOne({
-            field: fieldId,
-            fieldNumber: Number(fieldNumber),
-            date: formattedDate, // Artık formatlanmış tarih kullanılıyor
-            status: { $in: ["pending", "confirmed"] }
-        });
+        // Transaction başlat
+        const session = await mongoose.startSession();
+        session.startTransaction();
 
-        if (existingReservation) {
-            return res.status(400).json({ success: false, message: 'Seçtiğiniz saat dilimi zaten rezerve edilmiş.' });
+        try {
+            // Rezervasyon kontrolü - transaction içinde
+            const existingReservation = await Reservation.findOne({
+                field: fieldId,
+                fieldNumber: Number(fieldNumber),
+                date: formattedDate,
+                hour: hour,
+                status: { $in: ["pending", "confirmed"] }
+            }).session(session);
+
+            if (existingReservation) {
+                await session.abortTransaction();
+                session.endSession();
+                return res.status(400).json({ success: false, message: 'Seçtiğiniz saat dilimi zaten rezerve edilmiş.' });
+            }
+
+            // Yeni rezervasyon oluşturma - transaction içinde
+            const newReservation = new Reservation({
+                user: userId,
+                field: fieldId,
+                fieldNumber: parseInt(fieldNumber),
+                date: formattedDate,
+                hour: hour,
+                amount: 0,
+                paymentStatus: 'paid-by-subscription',
+                status: 'confirmed',
+                isCancelled: false,
+            });
+
+            await newReservation.save({ session });
+
+            // Abonelik hakkını düşürme - transaction içinde
+            activeSubscription.remainingMatches -= 1;
+            if (activeSubscription.remainingMatches === 0) {
+                activeSubscription.isActive = false;
+            }
+            await activeSubscription.save({ session });
+
+            // Transaction'ı onayla
+            await session.commitTransaction();
+            session.endSession();
+
+            res.status(200).json({ 
+                success: true, 
+                message: 'Abonelik hakkınız başarıyla kullanıldı ve rezervasyonunuz kaydedildi.', 
+                reservation: newReservation 
+            });
+
+        } catch (error) {
+            // Hata durumunda transaction'ı geri al
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
         }
-
-        // 3. Yeni rezervasyon oluşturma
-        const newReservation = new Reservation({
-            user: userId,
-            field: fieldId,
-            fieldNumber: parseInt(fieldNumber),
-            date: formattedDate, // Formatlanmış tarihi kaydediyoruz
-            hour: hour,
-            amount: 0,
-            paymentStatus: 'paid-by-subscription',
-            status: 'confirmed',
-            isCancelled: false,
-        });
-
-        await newReservation.save();
-
-        // 4. Abonelik hakkını düşürme
-        activeSubscription.remainingMatches -= 1;
-        if (activeSubscription.remainingMatches === 0) {
-            activeSubscription.isActive = false;
-        }
-        await activeSubscription.save();
-
-        res.status(200).json({ success: true, message: 'Abonelik hakkınız başarıyla kullanıldı ve rezervasyonunuz kaydedildi.', reservation: newReservation });
 
     } catch (error) {
         console.error('Abonelik hakkı kullanılarak rezervasyon oluşturulurken hata oluştu:', error);
-        res.status(500).json({ success: false, message: 'Rezervasyon oluşturulurken bir hata oluştu.', error: error.message });
+        res.status(500).json({ 
+            success: false, 
+            message: 'Rezervasyon oluşturulurken bir hata oluştu.', 
+            error: error.message 
+        });
     }
 };

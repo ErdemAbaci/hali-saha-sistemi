@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone, Shield, Briefcase, Crown } from 'lucide-react';
+import { Menu, X, User, LogOut, Calendar, Home, Info, HelpCircle, Phone, Shield, Briefcase, Crown, Users } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -225,6 +225,18 @@ const Navbar = () => {
                             Rezervasyonlarım
                           </div>
                         </Link>
+                        <Link
+                          to="/aboneliklerim"
+                          className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                          role="menuitem"
+                          tabIndex="-1"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <div className="flex items-center">
+                            <Users className="h-4 w-4 mr-2 text-gray-400" />
+                            Aboneliklerim
+                          </div>
+                        </Link>
                         <button
                           onClick={() => {
                             handleLogout();
@@ -369,6 +381,16 @@ const Navbar = () => {
                     className="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                   >
                     Rezervasyonlarım
+                  </Link>
+                  <Link
+                    to="/aboneliklerim"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsProfileOpen(false);
+                    }}
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    Aboneliklerim
                   </Link>
                   <button
                     onClick={() => {
