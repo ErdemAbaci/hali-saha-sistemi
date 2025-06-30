@@ -53,13 +53,13 @@ o Backend klasörüne gidin (örneğin server veya backend).
 o Gerekli paketleri yükleyin:
 o npm install
 
-o Bir .env dosyası oluşturun ve aşağıdaki gibi MongoDB bağlantı cümlenizi ve JWT anahtarınızı ekleyin:
+o Bir .env dosyası oluşturun(backend ve frontend için ayrı ayrı) ve aşağıdaki gibi MongoDB bağlantı cümlenizi ve JWT anahtarınızı ekleyin:
 o MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority
 o JWT_SECRET=gizli_bir_anahtar
 o PORT=5000
-STRIPE API KEYLERİ, GOOGLE MAPS API
+STRIPE API KEYLERİ, GOOGLE MAPS API KEYLERİ
 o Backend sunucusunu başlatın:
-o npm start
+o node server.js/ nodemon server.js
 
 5. Frontend'i Ayarlayın:
 o Yeni bir terminal açın ve frontend klasörüne gidin (örneğin client veya frontend).
