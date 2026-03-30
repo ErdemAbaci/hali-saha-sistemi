@@ -22,7 +22,8 @@ const paymentSchema = new mongoose.Schema(
     },
     paymentIntentId: { 
       type: String, 
-      required: true 
+      required: true,
+      unique: true,
     },
     status: { 
       type: String, 

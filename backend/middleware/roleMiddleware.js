@@ -1,19 +1,5 @@
-const checkRole = (roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Yetkilendirme gerekli' });
-    }
+const { authorize } = require("./authMiddleware");
 
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ 
-        message: 'Bu işlem için yetkiniz bulunmamaktadır',
-        requiredRole: roles,
-        currentRole: req.user.role
-      });
-    }
+const checkRole = (roles = []) => authorize(...roles);
 
-    next();
-  };
-};
-
-module.exports = checkRole; 
+module.exports = checkRole;

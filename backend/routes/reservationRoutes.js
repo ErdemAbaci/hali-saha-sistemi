@@ -8,10 +8,21 @@ const {
 } = require("../controllers/reservationController");
 
 const { protect } = require("../middleware/authMiddleware");
+const validate = require("../middleware/validate");
+const {
+  availableHoursSchema,
+  createReservationSchema,
+  reservationIdParamsSchema,
+} = require("../validators/reservationValidators");
 
-router.post("/", protect, createReservation);
-router.post("/available-hours", protect, getAvailableHours);
-router.patch("/:id/cancel", protect, cancelReservation);
+router.post("/", protect, validate(createReservationSchema), createReservation);
+router.post("/available-hours", protect, validate(availableHoursSchema), getAvailableHours);
+router.patch(
+  "/:id/cancel",
+  protect,
+  validate(reservationIdParamsSchema, "params"),
+  cancelReservation
+);
 router.get("/my-reservations", protect, getUserReservations);
 
 module.exports = router;

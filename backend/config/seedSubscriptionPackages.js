@@ -5,11 +5,6 @@ const SubscriptionPackage = require('../models/SubscriptionPackage');
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-console.log('Current working directory:', process.cwd());
-console.log('__dirname:', __dirname);
-console.log('Path to .env attempted:', path.join(__dirname, '..', '.env'));
-console.log('All environment variables loaded:', process.env);
-
 const subscriptionPackages = [
     {
         name: 'Aylık Paket',
@@ -39,20 +34,27 @@ const subscriptionPackages = [
 
 const seedSubscriptionPackages = async () => {
     try {
+        if (!process.env.MONGO_URI) {
+            throw new Error('MONGO_URI tanımlı değil');
+        }
+
         await mongoose.connect(process.env.MONGO_URI);
-        
-        // Mevcut paketleri temizle
-        await SubscriptionPackage.deleteMany({});
-        
-        // Yeni paketleri ekle
-        await SubscriptionPackage.insertMany(subscriptionPackages);
-        
-        console.log('Abonelik paketleri başarıyla eklendi');
-        process.exit(0);
+
+        for (const subscriptionPackage of subscriptionPackages) {
+            await SubscriptionPackage.updateOne(
+                { name: subscriptionPackage.name },
+                { $set: subscriptionPackage },
+                { upsert: true }
+            );
+        }
+
+        console.info('Abonelik paketleri başarıyla güncellendi');
     } catch (error) {
-        console.error('Hata:', error);
-        process.exit(1);
+        console.error('Seed hatası:', error.message);
+        process.exitCode = 1;
+    } finally {
+        await mongoose.disconnect();
     }
 };
 
-seedSubscriptionPackages(); 
+seedSubscriptionPackages();

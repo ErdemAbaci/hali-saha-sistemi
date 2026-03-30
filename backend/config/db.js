@@ -1,13 +1,19 @@
-// config/db.js
 const mongoose = require('mongoose');
+const { getEnv } = require('./env');
+const logger = require('../utils/logger');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ MongoDB bağlantısı başarılı');
+    const env = getEnv();
+
+    await mongoose.connect(env.MONGO_URI, {
+      autoIndex: env.NODE_ENV !== 'production',
+    });
+
+    logger.info('MongoDB bağlantısı başarılı');
   } catch (err) {
-    console.error('❌ MongoDB bağlantı hatası:', err.message);
-    process.exit(1); // Uygulama çöker
+    logger.error('MongoDB bağlantı hatası', err);
+    throw err;
   }
 };
 

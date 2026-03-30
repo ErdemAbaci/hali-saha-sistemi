@@ -1,31 +1,46 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { 
-    getSubscriptionPackages, 
-    createSubscription, 
-    getUserActiveSubscription, 
-    decreaseRemainingMatches,
-    cancelSubscription,
-    useSubscriptionRight
-} = require('../controllers/subscriptionController');
-const { protect } = require('../middleware/authMiddleware');
+const {
+  getSubscriptionPackages,
+  createSubscription,
+  getUserActiveSubscription,
+  decreaseRemainingMatches,
+  cancelSubscription,
+  useSubscriptionRight,
+} = require("../controllers/subscriptionController");
+const { protect } = require("../middleware/authMiddleware");
+const validate = require("../middleware/validate");
+const {
+  createSubscriptionSchema,
+  subscriptionIdParamsSchema,
+  useSubscriptionRightSchema,
+} = require("../validators/subscriptionValidators");
 
-// Abonelik paketlerini getir
-router.get('/packages', getSubscriptionPackages);
+router.get("/packages", getSubscriptionPackages);
 
-// Yeni abonelik oluştur
-router.post('/', protect, createSubscription);
+router.post("/", protect, validate(createSubscriptionSchema), createSubscription);
 
-// Kullanıcının aktif aboneliğini getir (Artık req.user._id kullanacak)
-router.get('/user', protect, getUserActiveSubscription);
+router.get("/user", protect, getUserActiveSubscription);
 
-// Rezervasyon sonrası maç hakkını düş
-router.patch('/:subscriptionId/decrease', protect, decreaseRemainingMatches);
+router.patch(
+  "/:subscriptionId/decrease",
+  protect,
+  validate(subscriptionIdParamsSchema, "params"),
+  decreaseRemainingMatches
+);
 
-// Aboneliği iptal et
-router.delete('/:subscriptionId', protect, cancelSubscription);
+router.delete(
+  "/:subscriptionId",
+  protect,
+  validate(subscriptionIdParamsSchema, "params"),
+  cancelSubscription
+);
 
-// Abonelik hakkı kullanarak rezervasyon oluştur
-router.post('/use-subscription-right', protect, useSubscriptionRight);
+router.post(
+  "/use-subscription-right",
+  protect,
+  validate(useSubscriptionRightSchema),
+  useSubscriptionRight
+);
 
-module.exports = router; 
+module.exports = router;

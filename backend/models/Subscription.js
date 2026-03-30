@@ -27,10 +27,10 @@ const subscriptionSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    createdAt: {
+    cancelledAt: {
         type: Date,
-        default: Date.now
+        default: null
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Subscription', subscriptionSchema); 

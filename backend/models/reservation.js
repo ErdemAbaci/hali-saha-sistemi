@@ -11,6 +11,8 @@ const reservationSchema = new mongoose.Schema(
     fieldNumber: { type: Number, required: true },
     date: { type: String, required: true },
     hour: { type: String, required: true },
+    slotKey: { type: String, required: true },
+    activeSlot: { type: Boolean, default: true },
     status: {
       type: String,
       enum: ["pending", "confirmed", "cancelled"],
@@ -19,5 +21,15 @@ const reservationSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+reservationSchema.index(
+  { slotKey: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { activeSlot: true },
+  }
+);
+
+reservationSchema.index({ field: 1, fieldNumber: 1, date: 1, status: 1 });
 
 module.exports = mongoose.model("Reservation", reservationSchema);

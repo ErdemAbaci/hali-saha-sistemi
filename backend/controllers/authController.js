@@ -1,118 +1,17 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const asyncHandler = require("../utils/asyncHandler");
+const authService = require("../services/authService");
 
-exports.register = async (req, res) => {
-  try {
-    const { name, email, password, phone } = req.body;
-    //is email exist?
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Bu email zaten kayıtlı" });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      phone,
-      role: "customer",
-    });
-    await newUser.save();
-    const token = jwt.sign(
-      {
-        id: newUser._id,
-        role: newUser.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
+exports.register = asyncHandler(async (req, res) => {
+  const result = await authService.register(req.body);
+  res.status(201).json(result);
+});
 
-    res.status(201).json({
-      token,
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Kayıt sırasında hata oluştu" });
-  }
-};
+exports.login = asyncHandler(async (req, res) => {
+  const result = await authService.login(req.body);
+  res.json(result);
+});
 
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Kullanıcıyı email ile bul
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Kullanıcı bulunamadı" });
-
-    // Şifreyi karşılaştır
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Şifre yanlış" });
-
-    // JWT token oluştur
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Giriş sırasında hata oluştu" });
-  }
-};
-
-exports.createAdmin = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    
-    // Email kontrolü
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Bu email zaten kayıtlı" });
-    }
-
-    // Şifreyi hashle
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // Yeni admin kullanıcısı oluştur
-    const newAdmin = new User({
-      name,
-      email,
-      password: hashedPassword,
-      role: "admin"
-    });
-
-    await newAdmin.save();
-
-    res.status(201).json({
-      message: "Admin başarıyla oluşturuldu",
-      user: {
-        id: newAdmin._id,
-        name: newAdmin.name,
-        email: newAdmin.email,
-        role: newAdmin.role
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Admin oluşturma sırasında hata oluştu" });
-  }
-};
+exports.createAdmin = asyncHandler(async (req, res) => {
+  const result = await authService.createAdmin(req.body);
+  res.status(201).json(result);
+});

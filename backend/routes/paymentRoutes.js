@@ -1,22 +1,39 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { createPayment, getPaymentStatus, getUserPayments } = require('../controllers/paymentController');
-const { createSubscriptionPayment } = require('../controllers/subscriptionPaymentController');
-const { protect } = require('../middleware/authMiddleware');
+const {
+  createPayment,
+  getPaymentStatus,
+  getUserPayments,
+} = require("../controllers/paymentController");
+const {
+  createSubscriptionPayment,
+} = require("../controllers/subscriptionPaymentController");
+const { protect } = require("../middleware/authMiddleware");
+const validate = require("../middleware/validate");
+const {
+  createPaymentSchema,
+  paymentStatusParamsSchema,
+} = require("../validators/paymentValidators");
+const {
+  createSubscriptionPaymentSchema,
+} = require("../validators/subscriptionValidators");
 
-// Ödeme oluştur (Rezervasyon için)
-router.post('/create', protect, createPayment);
+router.post("/create", protect, validate(createPaymentSchema), createPayment);
 
-// Abonelik ödemesi oluştur
-router.post('/create-subscription', protect, (req, res, next) => {
-    console.log('--> /api/payments/create-subscription rotası tetiklendi.');
-    next();
-}, createSubscriptionPayment);
+router.post(
+  "/create-subscription",
+  protect,
+  validate(createSubscriptionPaymentSchema),
+  createSubscriptionPayment
+);
 
-// Ödeme durumunu kontrol et
-router.get('/status/:paymentId', protect, getPaymentStatus);
+router.get(
+  "/status/:paymentId",
+  protect,
+  validate(paymentStatusParamsSchema, "params"),
+  getPaymentStatus
+);
 
-// Kullanıcının ödemelerini getir
-router.get('/my-payments', protect, getUserPayments);
+router.get("/my-payments", protect, getUserPayments);
 
-module.exports = router; 
+module.exports = router;
